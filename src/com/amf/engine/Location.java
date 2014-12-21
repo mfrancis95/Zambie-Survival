@@ -12,6 +12,14 @@ public class Location {
     public Location add(int x, int y) {
         return new Location(this.x + x, this.y + y);
     }
+    
+    public boolean equals(Object obj) {
+        if (obj instanceof Location) {
+            Location location = (Location) obj;
+            return x == location.x && y == location.y;
+        }
+        return false;
+    }
 
     public int hashCode() {
         int hash = 7;
