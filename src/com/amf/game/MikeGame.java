@@ -1,5 +1,6 @@
 package com.amf.game;
 
+import com.amf.engine.Entity;
 import com.amf.engine.Location;
 import com.amf.engine.GridMap;
 import com.amf.engine.Tileset;
@@ -8,7 +9,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -20,9 +20,9 @@ import javax.swing.Timer;
 
 public class MikeGame extends JFrame {
     
-    private GridMap<Point> map = new GridMap<>(32);
+    private GridMap map = new GridMap(32);
     
-    private Point player = new Point(64, 64);
+    private Entity player = new Entity();
     
     private Tileset tileset = new Tileset("tileset.png", 32);
     
@@ -82,21 +82,22 @@ public class MikeGame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (moving) {
                     Location location = map.getLocation(player);
+                    Location screenLocation = player.getScreenLocation();
                     int destinationScreenX = location.x * 32;
                     int destinationScreenY = location.y * 32;
-                    if (player.x < destinationScreenX) {
-                        player.x += 2;
+                    if (screenLocation.x < destinationScreenX) {
+                        player.setScreenLocation(screenLocation.add(2, 0));
                     }
-                    else if (player.x > destinationScreenX) {
-                        player.x -= 2;
+                    else if (screenLocation.x > destinationScreenX) {
+                        player.setScreenLocation(screenLocation.add(-2, 0));
                     }
-                    if (player.y < destinationScreenY) {
-                        player.y += 2;
+                    if (screenLocation.y < destinationScreenY) {
+                        player.setScreenLocation(screenLocation.add(0, 2));
                     }
-                    else if (player.y > destinationScreenY) {
-                        player.y -= 2;
+                    else if (screenLocation.y > destinationScreenY) {
+                        player.setScreenLocation(screenLocation.add(0, -2));
                     }
-                    if (player.x == destinationScreenX && player.y == destinationScreenY) {
+                    if (screenLocation.x == destinationScreenX && screenLocation.y == destinationScreenY) {
                         moving = false;
                     }
                 }
@@ -131,11 +132,12 @@ public class MikeGame extends JFrame {
                 g.drawLine(0, y, 720, y);
             }
             g.setColor(Color.RED);
-            g.fillOval(player.x, player.y, 32, 32);
+            Location location = player.getScreenLocation();
+            g.fillOval(location.x, location.y, 32, 32);
             if (selected) {
                 g.setColor(Color.WHITE);
                 g.setStroke(new BasicStroke(2));
-                g.drawOval(player.x, player.y, 32, 32);
+                g.drawOval(location.x, location.y, 32, 32);
             }
         }
     }
