@@ -1,4 +1,4 @@
-package com.amf.game;
+package com.amf.engine;
 
 public class Location {
     

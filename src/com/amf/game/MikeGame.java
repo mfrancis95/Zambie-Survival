@@ -1,5 +1,7 @@
 package com.amf.game;
 
+import com.amf.engine.Location;
+import com.amf.engine.GridMap;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -14,7 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class Game extends JFrame {
+public class MikeGame extends JFrame {
     
     private GridMap<Point> map = new GridMap<>(32);
     
@@ -58,7 +60,7 @@ public class Game extends JFrame {
     
     private Timer timer;
     
-    public Game() {
+    public MikeGame() {
         super("Zambie Survival");
         map.addEntity(player, 2, 2);
         add(new GamePanel());
@@ -125,7 +127,7 @@ public class Game extends JFrame {
     }
     
     public static void main(String[] args) {
-        new Game();
+        new MikeGame();
     }
     
 }

@@ -1,4 +1,4 @@
-package com.amf.game;
+package com.amf.engine;
 
 import java.util.HashMap;
 import java.util.Map;
