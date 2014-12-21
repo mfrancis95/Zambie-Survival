@@ -31,4 +31,11 @@ public class GridMap<T> {
         return null;
     }
     
+    public void move(Location from, Location to) {
+        T entity = entities.remove(from);
+        if (entity != null) {
+            entities.put(to, entity);
+        }
+    }
+    
 }
