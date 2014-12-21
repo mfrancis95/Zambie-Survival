@@ -18,6 +18,7 @@ public class GridMap {
     }
     
     public void addEntity(Entity entity, int x, int y) {
+        entity.setScreenLocation(new Location(x * squareSize, y * squareSize));
         entities.put(new Location(x, y), entity);
     }
     
