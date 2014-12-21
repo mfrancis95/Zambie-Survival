@@ -15,23 +15,38 @@ import javax.swing.Timer;
 
 public class Game extends JFrame {
     
-    private int playerX = 128, playerY = 128;
-    private int destinationX, destinationY;
+    private int playerMapX = 1, playerMapY = 1;
+    private int playerScreenX = 32, playerScreenY = 32;
     
     private boolean moving = false, selected = false;
     
     private MouseListener mouse = new MouseAdapter() {
         
         public void mouseClicked(MouseEvent me) {
-            int mouseX = me.getX();
-            int mouseY = me.getY();
+            int mapX = me.getX() / 32;
+            int mapY = me.getY() / 32;
+            int differenceX = mapX - playerMapX;
+            int differenceY = mapY - playerMapY;
             if (selected) {
-                destinationX = mouseX - 16;
-                destinationY = mouseY - 16;
-                moving = true;
                 selected = false;
+                if (differenceX == 1 && differenceY == 0) {
+                    playerMapX++;
+                }
+                else if (differenceX == -1 && differenceY == 0) {
+                    playerMapX--;
+                }
+                else if (differenceX == 0 && differenceY == 1) {
+                    playerMapY++;
+                }
+                else if (differenceX == 0 && differenceY == -1) {
+                    playerMapY--;
+                }
+                else {
+                    return;
+                }
+                moving = true;
             }
-            else if (mouseX >= playerX - 32 && mouseX <= playerX + 32 && mouseY >= playerY - 32 && mouseY <= playerY + 32) {
+            else if (differenceX == 0 && differenceY == 0) {
                 selected = true;
             }
         }
@@ -51,19 +66,21 @@ public class Game extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (moving) {
-                    if (playerX < destinationX) {
-                        playerX++;
+                    int destinationScreenX = playerMapX * 32;
+                    int destinationScreenY = playerMapY * 32;
+                    if (playerScreenX < destinationScreenX) {
+                        playerScreenX += 2;
                     }
-                    else if (playerX > destinationX) {
-                        playerX--;
+                    else if (playerScreenX > destinationScreenX) {
+                        playerScreenX -= 2;
                     }
-                    if (playerY < destinationY) {
-                        playerY++;
+                    if (playerScreenY < destinationScreenY) {
+                        playerScreenY += 2;
                     }
-                    else if (playerY > destinationY) {
-                        playerY--;
+                    else if (playerScreenY > destinationScreenY) {
+                        playerScreenY -= 2;
                     }
-                    if (playerX == destinationX && playerY == destinationY) {
+                    if (playerScreenX == destinationScreenX && playerScreenY == destinationScreenY) {
                         moving = false;
                     }
                 }
@@ -94,10 +111,10 @@ public class Game extends JFrame {
                 g.drawLine(0, y, 720, y);
             }
             g.setColor(Color.RED);
-            g.fillOval(playerX, playerY, 32, 32);
+            g.fillOval(playerScreenX, playerScreenY, 32, 32);
             if (selected) {
                 g.setColor(Color.BLUE);
-                g.drawOval(playerX, playerY, 32, 32);
+                g.drawOval(playerScreenX, playerScreenY, 32, 32);
             }
         }
     }
