@@ -2,9 +2,12 @@ package com.amf.game;
 
 public class GridMap<T> {
     
+    public final int squareSize;
+    
     private final T[][] entities;
     
-    public GridMap(int width, int height) {
+    public GridMap(int squareSize, int width, int height) {
+        this.squareSize = squareSize;
         entities = (T[][]) new Object[width][height];
     }
     
