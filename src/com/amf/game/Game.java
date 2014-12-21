@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -15,8 +16,9 @@ import javax.swing.Timer;
 
 public class Game extends JFrame {
     
-    private int playerMapX = 1, playerMapY = 1;
-    private int playerScreenX = 32, playerScreenY = 32;
+    private GridMap<Point> map = new GridMap<>(32);
+    
+    private Point player = new Point(64, 64);
     
     private boolean moving = false, selected = false;
     
@@ -25,21 +27,22 @@ public class Game extends JFrame {
         public void mouseClicked(MouseEvent me) {
             int mapX = me.getX() / 32;
             int mapY = me.getY() / 32;
-            int differenceX = mapX - playerMapX;
-            int differenceY = mapY - playerMapY;
+            Location location = map.getLocation(player);
+            int differenceX = mapX - location.x;
+            int differenceY = mapY - location.y;
             if (selected) {
                 selected = false;
                 if (differenceX == 1 && differenceY == 0) {
-                    playerMapX++;
+                    map.move(location, location.add(1, 0));
                 }
                 else if (differenceX == -1 && differenceY == 0) {
-                    playerMapX--;
+                    map.move(location, location.add(-1, 0));
                 }
                 else if (differenceX == 0 && differenceY == 1) {
-                    playerMapY++;
+                    map.move(location, location.add(0, 1));
                 }
                 else if (differenceX == 0 && differenceY == -1) {
-                    playerMapY--;
+                    map.move(location, location.add(0, -1));
                 }
                 else {
                     return;
@@ -57,6 +60,7 @@ public class Game extends JFrame {
     
     public Game() {
         super("Zambie Survival");
+        map.addEntity(player, 2, 2);
         add(new GamePanel());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
@@ -66,21 +70,22 @@ public class Game extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (moving) {
-                    int destinationScreenX = playerMapX * 32;
-                    int destinationScreenY = playerMapY * 32;
-                    if (playerScreenX < destinationScreenX) {
-                        playerScreenX += 2;
+                    Location location = map.getLocation(player);
+                    int destinationScreenX = location.x * 32;
+                    int destinationScreenY = location.y * 32;
+                    if (player.x < destinationScreenX) {
+                        player.x += 2;
                     }
-                    else if (playerScreenX > destinationScreenX) {
-                        playerScreenX -= 2;
+                    else if (player.x > destinationScreenX) {
+                        player.x -= 2;
                     }
-                    if (playerScreenY < destinationScreenY) {
-                        playerScreenY += 2;
+                    if (player.y < destinationScreenY) {
+                        player.y += 2;
                     }
-                    else if (playerScreenY > destinationScreenY) {
-                        playerScreenY -= 2;
+                    else if (player.y > destinationScreenY) {
+                        player.y -= 2;
                     }
-                    if (playerScreenX == destinationScreenX && playerScreenY == destinationScreenY) {
+                    if (player.x == destinationScreenX && player.y == destinationScreenY) {
                         moving = false;
                     }
                 }
@@ -111,10 +116,10 @@ public class Game extends JFrame {
                 g.drawLine(0, y, 720, y);
             }
             g.setColor(Color.RED);
-            g.fillOval(playerScreenX, playerScreenY, 32, 32);
+            g.fillOval(player.x, player.y, 32, 32);
             if (selected) {
                 g.setColor(Color.BLUE);
-                g.drawOval(playerScreenX, playerScreenY, 32, 32);
+                g.drawOval(player.x, player.y, 32, 32);
             }
         }
     }
