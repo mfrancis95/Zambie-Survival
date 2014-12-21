@@ -21,7 +21,7 @@ public class Tileset {
                     tiles.put(new Location(x / tileSize, y / tileSize), image.getSubimage(x, y, tileSize, tileSize));
                 }
             }
-            fallback = new BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB);
+            fallback = new BufferedImage(tileSize, tileSize, BufferedImage.TYPE_INT_RGB);
         } 
         catch (IOException ex) {
             System.out.println(ex);
