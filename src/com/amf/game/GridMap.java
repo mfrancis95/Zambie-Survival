@@ -1,30 +1,25 @@
 package com.amf.game;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GridMap<T> {
     
     public final int squareSize;
     
-    private final T[][] entities;
+    private final Map<Location, T> entities;
     
-    public GridMap(int squareSize, int width, int height) {
+    public GridMap(int squareSize) {
         this.squareSize = squareSize;
-        entities = (T[][]) new Object[width][height];
+        entities = new HashMap<>();
     }
     
     public void addEntity(T entity, int x, int y) {
-        entities[x][y] = entity;
+        entities.put(new Location(x, y), entity);
     }
     
     public T getEntity(int x, int y) {
-        return entities[x][y];
-    }
-    
-    public int getHeight() {
-        return entities[0].length;
-    }
-    
-    public int getWidth() {
-        return entities.length;
+        return entities.get(new Location(x, y));
     }
     
 }
