@@ -25,8 +25,8 @@ public class Tileset {
         }
     }
     
-    public BufferedImage getTile(int x, int y) {
-        return tiles.get(new Location(x, y));
+    public BufferedImage getTile(Location location) {
+        return tiles.get(location);
     }
     
 }
