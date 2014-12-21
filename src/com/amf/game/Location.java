@@ -10,7 +10,7 @@ public class Location {
     }
     
     public Location add(int x, int y) {
-        return new Location(this.x + y, this.y + y);
+        return new Location(this.x + x, this.y + y);
     }
 
     public int hashCode() {
