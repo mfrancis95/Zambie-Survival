@@ -1,9 +1,10 @@
 package com.amf.engine;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GridMap {
+public class GridMap implements Serializable {
     
     public final int squareSize;
     
