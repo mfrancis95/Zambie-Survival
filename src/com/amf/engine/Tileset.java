@@ -10,13 +10,13 @@ public class Tileset {
     
     private Map<Location, BufferedImage> tiles;
     
-    public Tileset(String resource) {
+    public Tileset(String resource, int tileSize) {
         try {
             BufferedImage image = ImageIO.read(getClass().getResource("/resources/" + resource));
             tiles = new HashMap<>();
-            for (int x = 0; x < image.getWidth(); x += 32) {
-                for (int y = 0; y < image.getHeight(); y += 32) {
-                    tiles.put(new Location(x / 32, y / 32), image.getSubimage(x, y, 32, 32));
+            for (int x = 0; x < image.getWidth(); x += tileSize) {
+                for (int y = 0; y < image.getHeight(); y += tileSize) {
+                    tiles.put(new Location(x / tileSize, y / tileSize), image.getSubimage(x, y, tileSize, tileSize));
                 }
             }
         } 

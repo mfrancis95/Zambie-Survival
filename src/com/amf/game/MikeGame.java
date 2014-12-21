@@ -24,7 +24,7 @@ public class MikeGame extends JFrame {
     
     private Point player = new Point(64, 64);
     
-    private Tileset tileset = new Tileset("tileset.png");
+    private Tileset tileset = new Tileset("tileset.png", 32);
     
     private boolean moving = false, selected = false;
     
