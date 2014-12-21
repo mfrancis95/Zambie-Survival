@@ -10,6 +10,8 @@ public class Tileset {
     
     private Map<Location, BufferedImage> tiles;
     
+    private BufferedImage fallback;
+    
     public Tileset(String resource, int tileSize) {
         try {
             BufferedImage image = ImageIO.read(getClass().getResource("/resources/" + resource));
@@ -19,6 +21,7 @@ public class Tileset {
                     tiles.put(new Location(x / tileSize, y / tileSize), image.getSubimage(x, y, tileSize, tileSize));
                 }
             }
+            fallback = new BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB);
         } 
         catch (IOException ex) {
             System.out.println(ex);
@@ -26,7 +29,8 @@ public class Tileset {
     }
     
     public BufferedImage getTile(Location location) {
-        return tiles.get(location);
+        BufferedImage tile = tiles.get(location);
+        return tile == null ? fallback : tile;
     }
     
 }
