@@ -22,4 +22,13 @@ public class GridMap<T> {
         return entities.get(new Location(x, y));
     }
     
+    public Location getLocation(T entity) {
+        for (Location l : entities.keySet()) {
+            if (entities.get(l) == entity) {
+                 return l;
+            }
+        }
+        return null;
+    }
+    
 }
