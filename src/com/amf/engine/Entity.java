@@ -3,14 +3,15 @@ package com.amf.engine;
 import java.io.Serializable;
 
 public abstract class Entity implements Serializable {
-
-    private Location screenLocation;
-
-    private int health;
     
-    public Entity(Location startLocation, int maxHealth) {
-        screenLocation = startLocation;
-        health = maxHealth;
+    private Direction direction;
+    
+    private int health = 100;
+    
+    private Location screenLocation;
+    
+    public Direction getDirection() {
+        return direction;
     }
 
     public int getHealth() {
@@ -22,10 +23,14 @@ public abstract class Entity implements Serializable {
     }
     
     public abstract void performAction(String action);
+    
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
 
     // or just this.health = health depending on damage calculations
     public void setHealth(int change) {
-        health = Math.max(0, change);
+        health = Math.max(0, health - change);
     }
 
     public void setScreenLocation(Location location) {

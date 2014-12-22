@@ -4,11 +4,11 @@ public class Survivor extends Entity {
 
     //can it ever be full? Money/credit system???
     private Inventory inventory;
-
-    public Survivor(Location startLocation, int maxHealth) {
-        super(startLocation, maxHealth);
+    
+    public String[] getInventory() {
+        return inventory.arrayOfInventory();
     }
-
+    
     @Override
     public void performAction(String action) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -24,6 +24,10 @@ public class Survivor extends Entity {
 
         public void addToInventory(int index) {
             inventory[index] += 1;
+        }
+        
+        public String[] arrayOfInventory() {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
         
         public boolean containsItem(int index) {
