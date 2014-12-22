@@ -125,6 +125,7 @@ public class Builder extends JFrame {
         quitButton.addActionListener(action);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        setResizable(false);
         JPanel northPanel = new JPanel();
         northPanel.add(newMapButton);
         northPanel.add(loadMapButton);
@@ -134,6 +135,7 @@ public class Builder extends JFrame {
         add(new MapPanel(), BorderLayout.CENTER);
         add(new TilesetPanel(), BorderLayout.WEST);
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
         timer = new Timer(16, new ActionListener() {
 
