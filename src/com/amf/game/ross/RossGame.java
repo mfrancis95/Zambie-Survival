@@ -1,4 +1,4 @@
-package com.amf.game;
+package com.amf.game.ross;
 
 import com.amf.engine.Entity;
 import com.amf.engine.Location;
