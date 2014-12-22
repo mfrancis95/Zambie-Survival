@@ -1,10 +1,10 @@
 package com.amf.game.mike;
 
-import com.amf.engine.Entity;
 import com.amf.engine.Game;
 import com.amf.engine.GameStateAdapter;
 import com.amf.engine.GridMap;
 import com.amf.engine.Location;
+import com.amf.engine.Survivor;
 import com.amf.engine.Tileset;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -15,7 +15,7 @@ public class MainGameState extends GameStateAdapter {
 
     private GridMap map;
 
-    private Entity player;
+    private Survivor player;
 
     private Tileset tileset;
 
@@ -23,7 +23,7 @@ public class MainGameState extends GameStateAdapter {
 
     public void init() {
         map = new GridMap(32);
-        player = new Entity();
+        player = new Survivor();
         tileset = new Tileset("tileset.png", 32);
         moving = false;
         selected = false;
