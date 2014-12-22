@@ -40,42 +40,38 @@ public class Builder extends JFrame {
     
     private Location selectedTile = new Location(0, 0);
     
-    private final ActionListener action = new ActionListener() {
-
-        public void actionPerformed(ActionEvent e) {
-            switch (e.getActionCommand()) {
-                case "New Map":
-                    map = new GridMap(32);
-                    break;
-                case "Load Map":
-                    if (chooser.showOpenDialog(Builder.this) == JFileChooser.APPROVE_OPTION) {
-                        try {
-                            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
-                            map = (GridMap) ois.readObject();
-                            ois.close();
-                        }
-                        catch (Exception ex) {
-                            JOptionPane.showMessageDialog(Builder.this, ex);
-                        }
+    private final ActionListener action = (ActionEvent e) -> {
+        switch (e.getActionCommand()) {
+            case "New Map":
+                map = new GridMap(32);
+                break;
+            case "Load Map":
+                if (chooser.showOpenDialog(Builder.this) == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
+                        map = (GridMap) ois.readObject();
+                        ois.close();
                     }
-                    break;
-                case "Save Map":
-                    if (chooser.showSaveDialog(Builder.this) == JFileChooser.APPROVE_OPTION) {
-                        try {
-                            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(chooser.getSelectedFile().toString() + ".zsm"));
-                            oos.writeObject(map);
-                            oos.close();
-                        } 
-                        catch (IOException ex) {
-                            JOptionPane.showMessageDialog(Builder.this, ex);
-                        }
+                    catch (Exception ex) {
+                        JOptionPane.showMessageDialog(Builder.this, ex);
                     }
-                    break;
-                case "Quit":
-                    System.exit(0);
-            }
+                }
+                break;
+            case "Save Map":
+                if (chooser.showSaveDialog(Builder.this) == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(chooser.getSelectedFile().toString() + ".zsm"));
+                        oos.writeObject(map);
+                        oos.close();
+                    }
+                    catch (IOException ex) {
+                        JOptionPane.showMessageDialog(Builder.this, ex);
+                    }
+                }
+                break;
+            case "Quit":
+                System.exit(0);
         }
-        
     };
     
     private final MouseAdapter mapMouse = new MouseAdapter() {
@@ -109,7 +105,7 @@ public class Builder extends JFrame {
         
     };
     
-    private Timer timer;
+    private final Timer timer;
     
     private final JButton newMapButton = new JButton("New Map");
     private final JButton loadMapButton = new JButton("Load Map");
