@@ -28,7 +28,7 @@ public class MikeGame extends JFrame {
     
     private boolean moving = false, selected = false;
     
-    private MouseListener mouse = new MouseAdapter() {
+    private final MouseListener mouse = new MouseAdapter() {
         
         public void mousePressed(MouseEvent me) {
             int mapX = me.getX() / 32;
@@ -62,19 +62,21 @@ public class MikeGame extends JFrame {
         
     };
     
-    private Timer timer;
+    private final Timer timer;
     
     public MikeGame() {
         super("Zambie Survival");
         map.addEntity(player, 2, 2);
         for (int x = 0; x < 22; x++) {
             for (int y = 0; y < 15; y++) {
-                map.addTile(new Location((int) (Math.random() * 6), (int) (Math.random() * 7)), x, y);
+                map.addTile(new Location((int) (Math.random() * 6), (int) (Math.random() * 10)), x, y);
             }
         }
         add(new GamePanel());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
         timer = new Timer(16, new ActionListener() {
 
