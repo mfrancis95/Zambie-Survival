@@ -12,11 +12,15 @@ public class Tileset {
     
     private final Map<Location, BufferedImage> tiles;
     
+    private int width, height;
+    
     public Tileset(String resource, int tileSize) {
         fallback = new BufferedImage(tileSize, tileSize, BufferedImage.TYPE_INT_RGB);
         tiles = new HashMap<>();
         try {
             BufferedImage image = ImageIO.read(getClass().getResource("/resources/" + resource));
+            width = image.getWidth();
+            height = image.getHeight();
             for (int x = 0; x < image.getWidth(); x += tileSize) {
                 for (int y = 0; y < image.getHeight(); y += tileSize) {
                     tiles.put(new Location(x / tileSize, y / tileSize), image.getSubimage(x, y, tileSize, tileSize));
@@ -28,9 +32,17 @@ public class Tileset {
         }
     }
     
+    public int getHeight() {
+        return height;
+    }
+    
     public BufferedImage getTile(Location location) {
         BufferedImage tile = tiles.get(location);
         return tile == null ? fallback : tile;
+    }
+    
+    public int getWidth() {
+        return width;
     }
     
 }

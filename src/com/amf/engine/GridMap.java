@@ -1,9 +1,10 @@
 package com.amf.engine;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GridMap {
+public class GridMap implements Serializable {
     
     public final int squareSize;
     
@@ -48,6 +49,14 @@ public class GridMap {
         if (entity != null) {
             entities.put(to, entity);
         }
+    }
+    
+    public Entity removeEntity(int x, int y) {
+        return entities.remove(new Location(x, y));
+    }
+    
+    public Location removeTile(int x, int y) {
+        return tiles.remove(new Location(x, y));
     }
     
 }
