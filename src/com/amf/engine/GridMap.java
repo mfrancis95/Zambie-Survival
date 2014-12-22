@@ -51,4 +51,12 @@ public class GridMap implements Serializable {
         }
     }
     
+    public Entity removeEntity(int x, int y) {
+        return entities.remove(new Location(x, y));
+    }
+    
+    public Location removeTile(int x, int y) {
+        return tiles.remove(new Location(x, y));
+    }
+    
 }
