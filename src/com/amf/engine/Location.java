@@ -1,6 +1,8 @@
 package com.amf.engine;
 
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable {
     
     public final int x, y;
     
