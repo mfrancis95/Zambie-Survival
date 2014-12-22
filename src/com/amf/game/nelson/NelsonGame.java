@@ -1,6 +1,5 @@
-package com.amf.game;
+package com.amf.game.nelson;
 
-import com.amf.engine.Entity;
 import com.amf.engine.Location;
 import com.amf.engine.GridMap;
 import com.amf.engine.Tileset;
@@ -9,6 +8,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -18,17 +18,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class MikeGame extends JFrame {
+public class NelsonGame extends JFrame {
     
-    private GridMap map = new GridMap(32);
+    private GridMap<Point> map = new GridMap<>(32);
     
-    private Entity player = new Entity();
+    private Point player = new Point(64, 64);
     
     private Tileset tileset = new Tileset("tileset.png", 32);
     
     private boolean moving = false, selected = false;
     
-    private final MouseListener mouse = new MouseAdapter() {
+    private MouseListener mouse = new MouseAdapter() {
         
         public void mousePressed(MouseEvent me) {
             int mapX = me.getX() / 32;
@@ -62,21 +62,19 @@ public class MikeGame extends JFrame {
         
     };
     
-    private final Timer timer;
+    private Timer timer;
     
-    public MikeGame() {
+    public NelsonGame() {
         super("Zambie Survival");
         map.addEntity(player, 2, 2);
         for (int x = 0; x < 22; x++) {
             for (int y = 0; y < 15; y++) {
-                map.addTile(new Location((int) (Math.random() * 6), (int) (Math.random() * 10)), x, y);
+                map.addTile(new Location((int) (Math.random() * 6), (int) (Math.random() * 7)), x, y);
             }
         }
         add(new GamePanel());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setResizable(false);
         pack();
-        setLocationRelativeTo(null);
         setVisible(true);
         timer = new Timer(16, new ActionListener() {
 
@@ -84,22 +82,21 @@ public class MikeGame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (moving) {
                     Location location = map.getLocation(player);
-                    Location screenLocation = player.getScreenLocation();
                     int destinationScreenX = location.x * 32;
                     int destinationScreenY = location.y * 32;
-                    if (screenLocation.x < destinationScreenX) {
-                        player.setScreenLocation(screenLocation.add(2, 0));
+                    if (player.x < destinationScreenX) {
+                        player.x += 2;
                     }
-                    else if (screenLocation.x > destinationScreenX) {
-                        player.setScreenLocation(screenLocation.add(-2, 0));
+                    else if (player.x > destinationScreenX) {
+                        player.x -= 2;
                     }
-                    if (screenLocation.y < destinationScreenY) {
-                        player.setScreenLocation(screenLocation.add(0, 2));
+                    if (player.y < destinationScreenY) {
+                        player.y += 2;
                     }
-                    else if (screenLocation.y > destinationScreenY) {
-                        player.setScreenLocation(screenLocation.add(0, -2));
+                    else if (player.y > destinationScreenY) {
+                        player.y -= 2;
                     }
-                    if (screenLocation.x == destinationScreenX && screenLocation.y == destinationScreenY) {
+                    if (player.x == destinationScreenX && player.y == destinationScreenY) {
                         moving = false;
                     }
                 }
@@ -134,18 +131,17 @@ public class MikeGame extends JFrame {
                 g.drawLine(0, y, 720, y);
             }
             g.setColor(Color.RED);
-            Location location = player.getScreenLocation();
-            g.fillOval(location.x, location.y, 32, 32);
+            g.fillOval(player.x, player.y, 32, 32);
             if (selected) {
                 g.setColor(Color.WHITE);
                 g.setStroke(new BasicStroke(2));
-                g.drawOval(location.x, location.y, 32, 32);
+                g.drawOval(player.x, player.y, 32, 32);
             }
         }
     }
     
     public static void main(String[] args) {
-        new MikeGame();
+        new NelsonGame();
     }
     
 }
