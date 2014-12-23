@@ -7,6 +7,7 @@ import com.amf.engine.GridMap;
 import com.amf.engine.Location;
 import com.amf.engine.Survivor;
 import com.amf.engine.Tileset;
+import com.amf.engine.Zambie;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -29,6 +30,8 @@ public class MainGameState extends GameStateAdapter {
         iKeyReleased = false;
 
         map.addEntity(player, 2, 2);
+        map.addEntity(new Zambie(), 6, 6);
+        map.addEntity(new Zambie(), 7, 7);
         for (int x = 0; x < 22; x++) {
             for (int y = 0; y < 15; y++) {
                 map.addTile(new Location((int) (Math.random() * 6), (int) (Math.random() * 10)), x, y);
