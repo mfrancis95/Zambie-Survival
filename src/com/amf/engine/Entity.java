@@ -33,6 +33,21 @@ public abstract class Entity implements Serializable {
         return selected;
     }
     
+    public boolean move(GridMap map, Direction direction) {
+        Location from = map.getLocation(this);
+        Location to = from.next(direction);
+        if (map.getEntity(to) != null) {
+            selected = false;
+            return false;
+        }
+        else {
+            map.move(from, to);
+            moving = true;
+            selected = false;
+            return true;
+        }
+    }
+    
     public boolean move(GridMap map, Location location) {
         Location from = map.getLocation(this);
         if (!from.isAdjacentTo(location)) {
