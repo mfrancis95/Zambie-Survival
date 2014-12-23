@@ -60,18 +60,18 @@ public class MainGameState extends GameStateAdapter {
     }
 
     public void render(Graphics2D g) {
-        for (int x = 0; x < 22; x++) {
+        for (int x = 0; x < 20; x++) {
             for (int y = 0; y < 15; y++) {
                 Location location = map.getTile(x, y);
                 g.drawImage(tileset.getTile(location), null, x * 32, y * 32);
             }
         }
         g.setColor(Color.GRAY);
-        for (int x = 0; x < 720; x += 32) {
+        for (int x = 0; x < 640; x += 32) {
             g.drawLine(x, 0, x, 480);
         }
         for (int y = 0; y < 480; y += 32) {
-            g.drawLine(0, y, 720, y);
+            g.drawLine(0, y, 640, y);
         }
         for (Entity e : map.getEntities()) {
             e.render(g);

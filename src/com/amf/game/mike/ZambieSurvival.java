@@ -11,7 +11,7 @@ public class ZambieSurvival {
         game.addState("Main Game", new MainGameState());
         game.addState("Inventory", new InventoryState());
         game.enterState("Title", true);
-        new GameContainer(game, "Zambie Survival").start();
+        new GameContainer(game, "Zambie Survival", 640, 480).start();
     }
     
 }
