@@ -13,7 +13,7 @@ public class Location implements Serializable {
     public Location(int x, int y) {
         this.x = x;
         this.y = y;
-    }
+    }    
     
     public Location add(int x, int y) {
         return new Location(this.x + x, this.y + y);

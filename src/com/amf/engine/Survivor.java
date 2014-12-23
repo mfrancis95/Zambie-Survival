@@ -35,7 +35,7 @@ public class Survivor extends Entity {
          *defaulted to 10 unique items. Each item can go in specific spot.
          *if no like, can switch back to HashMap. This way seems easier to handle 
          given we have an invariant of which item goes where */
-        int[] inventory = new int[10];
+        int[] inventory = new int[3];
 
         public void addToInventory(int index) {
             inventory[index] += 1;
