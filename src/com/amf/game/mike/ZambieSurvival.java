@@ -9,6 +9,7 @@ public class ZambieSurvival {
         Game game = new Game();
         game.addState("Title", new TitleState());
         game.addState("Main Game", new MainGameState());
+        game.addState("Inventory", new InventoryState());
         game.enterState("Title", true);
         new GameContainer(game, "Zambie Survival").start();
     }

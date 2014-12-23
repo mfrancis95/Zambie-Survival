@@ -9,6 +9,7 @@ import com.amf.engine.Survivor;
 import com.amf.engine.Tileset;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class MainGameState extends GameStateAdapter {
@@ -18,17 +19,26 @@ public class MainGameState extends GameStateAdapter {
     private Survivor player;
 
     private Tileset tileset;
+    
+    private boolean iKeyReleased;
 
     public void init() {
         map = new GridMap(32);
         player = new Survivor();
         tileset = new Tileset("tileset.png", 32);
+        iKeyReleased = false;
 
         map.addEntity(player, 2, 2);
         for (int x = 0; x < 22; x++) {
             for (int y = 0; y < 15; y++) {
                 map.addTile(new Location((int) (Math.random() * 6), (int) (Math.random() * 10)), x, y);
             }
+        }
+    }
+    
+    public void keyReleased(KeyEvent ke) {
+        if (ke.getKeyCode() == KeyEvent.VK_I) {
+            iKeyReleased = true;
         }
     }
 
@@ -66,8 +76,14 @@ public class MainGameState extends GameStateAdapter {
     }
 
     public void update(Game game) {
-        for (Entity e : map.getEntities()) {
-            e.update(map);
+        if (iKeyReleased) {
+            iKeyReleased = false;
+            game.enterState("Inventory", true);
+        }
+        else {
+            for (Entity e : map.getEntities()) {
+                e.update(map);
+            }
         }
     }
 
