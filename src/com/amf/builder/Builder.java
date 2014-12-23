@@ -157,11 +157,8 @@ public class Builder extends JFrame {
         
         public void paintComponent(Graphics bork) {
             Graphics2D g = (Graphics2D) bork;
-            for (int x = 0; x < 20; x++) {
-                for (int y = 0; y < 15; y++) {
-                    Location location = map.getTile(x, y);
-                    g.drawImage(tileset.getTile(location), null, x * 32, y * 32);
-                }
+            for (Location l : map.getTileLocations()) {
+                g.drawImage(tileset.getTile(map.getTile(l)), null, l.x * 32, l.y * 32);
             }
             g.setColor(Color.GRAY);
             for (int x = 0; x < 640; x += 32) {
@@ -186,10 +183,8 @@ public class Builder extends JFrame {
         
         public void paintComponent(Graphics bork) {
             Graphics2D g = (Graphics2D) bork;
-            for (int x = 0; x < 6; x++) {
-                for (int y = 0; y < 10; y++) {
-                    g.drawImage(tileset.getTile(new Location(x, y)), null, x * 32, y * 32);
-                }
+            for (Location l : tileset.getTileLocations()) {
+                g.drawImage(tileset.getTile(l), null, l.x * 32, l.y * 32);
             }
             g.setColor(Color.RED);
             g.setStroke(new BasicStroke(2));
