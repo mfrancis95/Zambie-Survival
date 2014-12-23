@@ -7,6 +7,7 @@ High Priority:
   - AI(pathfinding, strategy, attacking, spawning)
 - UI design(InventoryPane, ActionPane, InfoPane)
 - Entity Actions - heal, attack, move
+- Figure out what to place in inventory and where (also cost system)
 
 Low Priority:
 
