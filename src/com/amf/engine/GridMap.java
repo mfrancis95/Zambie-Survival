@@ -2,7 +2,7 @@ package com.amf.engine;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GridMap implements Serializable {
@@ -15,8 +15,8 @@ public class GridMap implements Serializable {
     
     public GridMap(int squareSize) {
         this.squareSize = squareSize;
-        entities = new HashMap<>();
-        tiles = new HashMap<>();
+        entities = new LinkedHashMap<>();
+        tiles = new LinkedHashMap<>();
     }
     
     public void addEntity(Entity entity, int x, int y) {
@@ -32,6 +32,10 @@ public class GridMap implements Serializable {
         return entities.values();
     }
     
+    public Collection<Location> getEntityLocations() {
+        return entities.keySet();
+    }
+    
     public Entity getEntity(Location location) {
         return entities.get(location);
     }
@@ -45,8 +49,12 @@ public class GridMap implements Serializable {
         return null;
     }
     
-    public Location getTile(int x, int y) {
-        return tiles.get(new Location(x, y));
+    public Location getTile(Location location) {
+        return tiles.get(location);
+    }
+    
+    public Collection<Location> getTileLocations() {
+        return tiles.keySet();
     }
     
     public Collection<Location> getTiles() {
