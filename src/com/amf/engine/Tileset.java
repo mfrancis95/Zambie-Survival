@@ -2,7 +2,8 @@ package com.amf.engine;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 
@@ -16,7 +17,7 @@ public class Tileset {
     
     public Tileset(String resource, int tileSize) {
         fallback = new BufferedImage(tileSize, tileSize, BufferedImage.TYPE_INT_RGB);
-        tiles = new HashMap<>();
+        tiles = new LinkedHashMap<>();
         try {
             BufferedImage image = ImageIO.read(getClass().getResource("/resources/" + resource));
             width = image.getWidth();
@@ -43,6 +44,10 @@ public class Tileset {
     public BufferedImage getTile(Location location) {
         BufferedImage tile = tiles.get(location);
         return tile == null ? fallback : tile;
+    }
+    
+    public Collection<Location> getTileLocations() {
+        return tiles.keySet();
     }
     
     public int getWidth() {
