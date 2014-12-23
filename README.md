@@ -6,8 +6,7 @@ High Priority:
   - Way to Queue up actions - i.e: pathfinding for movement.
   - AI(pathfinding, strategy, attacking, spawning)
 - UI design(InventoryPane, ActionPane, InfoPane)
-- Entity Actions(heal, attack, move)
-- 
+- Entity Actions - heal, attack, move
 
 Low Priority:
 
