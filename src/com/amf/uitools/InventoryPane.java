@@ -30,7 +30,7 @@ public class InventoryPane extends UIPane{
     private Location selectedLocation;
 
     public InventoryPane() {
-        super(3, SIZE, new Dimension(300,100), new MatrixDimension(1,3));
+        super(3, SIZE, new MatrixDimension(1,3));
         
         inventory = new Inventory();
     }

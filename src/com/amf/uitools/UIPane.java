@@ -27,12 +27,12 @@ public class UIPane extends JPanel{
     public final int size;//TEMP VALUE
     
     /**
-     * Dimension of the Pane.
+     * Dimension of the Pane - width x height.
      */
     public final Dimension dimension;    
     
     /**
-     * row by col(y by x)(how you want to layout the buttons)
+     * row by col(y by x)(how you want to layout the buttons).
      */
     public final MatrixDimension layout;
     
@@ -49,14 +49,19 @@ public class UIPane extends JPanel{
             int x = e.getX();
             int y = e.getY();
             if(x <= layout.col*size && y <= layout.row*size){
-                int i = calculateMouseIndex(x,y);
-                System.out.println(i);
+                try{
+                    int i = calculateMouseIndex(x,y);
+                    System.out.println(i);
             
-                GraphicButton curr = buttons[i];
+                    GraphicButton curr = buttons[i];
             
-                curr.update(buttons, i, GraphicButton.CLICKED);
+                    curr.update(buttons, i, GraphicButton.CLICKED);
                 
-                repaint();
+                    repaint();
+                
+                } catch(ArrayIndexOutOfBoundsException aie){
+                    System.out.println("Not an nxn matrix(not square)");
+                }
             } 
         }
 
@@ -66,15 +71,19 @@ public class UIPane extends JPanel{
             int y = e.getY();            
             
             if(x <= layout.col*size && y <= layout.row*size){
-                int mi = mouseIndex;
-                int i = calculateMouseIndex(x,y);
-                System.out.println(i);
+                try{
+                    int mi = mouseIndex;
+                    int i = calculateMouseIndex(x,y);
+                    System.out.println(i);
                     
-                if(i != mi){
-                    GraphicButton curr = buttons[i];            
-                    curr.update(buttons, i, GraphicButton.HOVERING);
+                    if(i != mi){
+                        GraphicButton curr = buttons[i];            
+                        curr.update(buttons, i, GraphicButton.HOVERING);
                 
-                    repaint();
+                        repaint();
+                    }
+                } catch(ArrayIndexOutOfBoundsException aie){
+                    System.out.println("Not an nxn matrix(not square)");
                 }
             }
         }          
@@ -117,16 +126,20 @@ public class UIPane extends JPanel{
      * Total number of GraphicButtons in the UIPane.
      * @param ICON_SIZE
      * Size of the GraphicButtons in the UIPane.
-     * @param DIMENSION
-     * Dimensions of the UIPane - width x height.
      * @param LAYOUT 
      * Layout of the UIPane - row x col.
+     * @throws IllegalArgumentException
      */
-    public UIPane(int TOTAL_ITEMS, int ICON_SIZE, Dimension DIMENSION, MatrixDimension LAYOUT) {
+    public UIPane(int TOTAL_ITEMS, int ICON_SIZE, MatrixDimension LAYOUT) throws IllegalArgumentException {
         this.totalItems = TOTAL_ITEMS;
         this.size = ICON_SIZE;
-        this.dimension = DIMENSION;
         this.layout = LAYOUT;
+        
+        if(layout.col*layout.row < totalItems){
+            throw new IllegalArgumentException("Cannot have more items then matrix is able to hold.");
+        }
+        
+        this.dimension = new Dimension(layout.col*size, layout.row*size);
         
         buttons = new GraphicButton[TOTAL_ITEMS];
         
@@ -156,8 +169,11 @@ public class UIPane extends JPanel{
         for(int c=0;c<layout.col;c++){
             for(int r=0;r<layout.row;r++){
                 int z = convertMatrixToVectorIndex(r+1,c, layout.col);
-                
-                buttons[z].drawButtonIcon(g, new Location(c*size,r*size));
+                try{
+                    buttons[z].drawButtonIcon(g, new Location(c*size,r*size));
+                } catch(ArrayIndexOutOfBoundsException aie){
+                    System.out.println("Not an nxn matrix(not square)");
+                }
             }
         }        
     }
@@ -165,7 +181,7 @@ public class UIPane extends JPanel{
     public static void main(String[] args){
         JFrame frame = new JFrame("test");
         
-        UIPane pane = new UIPane(3,100,new Dimension(100,300), new MatrixDimension(3,1));
+        UIPane pane = new UIPane(23,100, new MatrixDimension(5,5));
         
         frame.setPreferredSize(pane.dimension);
         frame.setLayout(new GridLayout(1,1));
