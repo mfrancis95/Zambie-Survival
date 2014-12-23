@@ -7,4 +7,5 @@ High Priority:
 Low Priority:
 
 - Audio system.
-- Replace Swing's Timer with our own timer system.
+- Sprite management.
+- Replace Swing's Timer with our own timer.
