@@ -26,10 +26,10 @@ public class GameContainer {
         
     });
     
-    public GameContainer(Game game, String title) {
+    public GameContainer(Game game, String title, int width, int height) {
         this.game = game;
         window = new JFrame(title);
-        gamePanel = new GamePanel();
+        gamePanel = new GamePanel(width, height);
         window.add(gamePanel);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
@@ -44,13 +44,13 @@ public class GameContainer {
     
     private class GamePanel extends JPanel {
         
-        GamePanel() {
+        GamePanel(int width, int height) {
             super();
             addKeyListener(game);
             addMouseListener(game);
             addMouseMotionListener(game);
             setFocusable(true);
-            setPreferredSize(new Dimension(720, 480));
+            setPreferredSize(new Dimension(width, height));
         }
         
         public void paintComponent(Graphics bork) {

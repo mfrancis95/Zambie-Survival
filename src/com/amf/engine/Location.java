@@ -55,4 +55,19 @@ public class Location implements Serializable {
         return Math.abs(x - location.x) + Math.abs(y - location.y) == 1;
     }
     
+    public Location next(Direction direction) {
+        switch (direction) {
+            case NORTH:
+                return add(0, 1);
+            case SOUTH:
+                return add(0, -1);
+            case EAST:
+                return add(1, 0);
+            case WEST:
+                return add(-1, 0);
+            default:
+                return null;
+        }
+    }
+    
 }

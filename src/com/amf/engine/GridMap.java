@@ -49,6 +49,10 @@ public class GridMap implements Serializable {
         return tiles.get(new Location(x, y));
     }
     
+    public Collection<Location> getTiles() {
+        return tiles.values();
+    }
+    
     public void move(Location from, Location to) {
         Entity entity = entities.remove(from);
         if (entity != null) {
