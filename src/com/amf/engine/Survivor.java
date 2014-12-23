@@ -49,10 +49,6 @@ public class Survivor extends Entity {
             return inventory[index] != 0;
         }
         
-        private void getInventory() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-        
         //Assumes contains item was called already because idk if we 
         //want to do error handling
         public void removeItem(int index) {
