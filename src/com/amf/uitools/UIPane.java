@@ -15,7 +15,7 @@ import javax.swing.JPanel;
  *
  * @author Nelnel33
  */
-public class UIPane extends JPanel{
+public class UIPane{
     /**
      * Total number of buttons in this pane.
      */
@@ -35,6 +35,11 @@ public class UIPane extends JPanel{
      * row by col(y by x)(how you want to layout the buttons).
      */
     public final MatrixDimension layout;
+    
+    /**
+     * Location on the JPanel
+     */
+    public final Location placement;
     
     /**
      * Which button the mouse is currently on.
@@ -57,7 +62,7 @@ public class UIPane extends JPanel{
             
                     curr.update(buttons, i, GraphicButton.CLICKED);
                 
-                    repaint();
+                    //repaint();
                 
                 } catch(ArrayIndexOutOfBoundsException aie){
                     System.out.println("Not an nxn matrix(not square)");
@@ -80,7 +85,7 @@ public class UIPane extends JPanel{
                         GraphicButton curr = buttons[i];            
                         curr.update(buttons, i, GraphicButton.HOVERING);
                 
-                        repaint();
+                        //repaint();
                     }
                 } catch(ArrayIndexOutOfBoundsException aie){
                     System.out.println("Not an nxn matrix(not square)");
@@ -128,12 +133,14 @@ public class UIPane extends JPanel{
      * Size of the GraphicButtons in the UIPane.
      * @param LAYOUT 
      * Layout of the UIPane - row x col.
+     * @param placement
      * @throws IllegalArgumentException
      */
-    public UIPane(int TOTAL_ITEMS, int ICON_SIZE, MatrixDimension LAYOUT) throws IllegalArgumentException {
+    public UIPane(int TOTAL_ITEMS, int ICON_SIZE, MatrixDimension LAYOUT, Location placement) throws IllegalArgumentException {
         this.totalItems = TOTAL_ITEMS;
         this.size = ICON_SIZE;
         this.layout = LAYOUT;
+        this.placement = placement;
         
         if(layout.col*layout.row < totalItems){
             throw new IllegalArgumentException("Cannot have more items then matrix is able to hold.");
@@ -147,10 +154,10 @@ public class UIPane extends JPanel{
             buttons[i] = new GraphicButton(ICON_SIZE);
         }
         
-        this.addMouseListener(mouse);
-        this.addMouseMotionListener(mouse);
+        //this.addMouseListener(mouse);
+        //this.addMouseMotionListener(mouse);
        
-        setBackground(Color.BLUE);
+        //setBackground(Color.BLUE);
     }   
 
     public int getMouseIndex() {
@@ -160,17 +167,16 @@ public class UIPane extends JPanel{
     public GraphicButton[] getButtons() {
         return buttons;
     }    
-    
-    @Override
-    public void paintComponent(Graphics og){
-        super.paintComponent(og);
-        Graphics2D g = (Graphics2D)og;
+
+    public void render(Graphics2D g){
+        //super.paintComponent(og);
+        //Graphics2D g = (Graphics2D)og;
         
         for(int c=0;c<layout.col;c++){
             for(int r=0;r<layout.row;r++){
                 int z = convertMatrixToVectorIndex(r+1,c, layout.col);
                 try{
-                    buttons[z].drawButtonIcon(g, new Location(c*size,r*size));
+                    buttons[z].drawButtonIcon(g, new Location(placement.x+(c*size), placement.y+(r*size)));
                 } catch(ArrayIndexOutOfBoundsException aie){
                     System.out.println("Not an nxn matrix(not square)");
                 }
@@ -181,11 +187,11 @@ public class UIPane extends JPanel{
     public static void main(String[] args){
         JFrame frame = new JFrame("test");
         
-        UIPane pane = new UIPane(23,100, new MatrixDimension(5,5));
+        UIPane pane = new UIPane(23,100, new MatrixDimension(5,5), new Location(0,0));
         
         frame.setPreferredSize(pane.dimension);
         frame.setLayout(new GridLayout(1,1));
-        frame.add(pane);
+        //frame.add(pane);
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
