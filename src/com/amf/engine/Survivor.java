@@ -9,6 +9,8 @@ public class Survivor extends Entity {
     //can it ever be full? Money/credit system???
     private Inventory inventory;
     
+    public static final int MAX_HEALTH = 100;
+    
     public String[] getInventory() {
         return inventory.arrayOfInventory();
     }
