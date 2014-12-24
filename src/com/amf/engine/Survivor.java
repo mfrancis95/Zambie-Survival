@@ -11,7 +11,7 @@ public class Survivor extends Entity {
     
     public static final int MAX_HEALTH = 100;
     
-    public String[] getInventory() {
+    public int[] getInventory() {
         return inventory.arrayOfInventory();
     }
     
@@ -43,8 +43,8 @@ public class Survivor extends Entity {
             inventory[index] += 1;
         }
         
-        public String[] arrayOfInventory() {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public int[] arrayOfInventory() {
+            return inventory;
         }
         
         public boolean containsItem(int index) {
