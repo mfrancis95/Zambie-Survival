@@ -47,7 +47,8 @@ public class UIPane{
     private int mouseIndex;
     
     private GraphicButton[] buttons;
-
+    
+    /*
     private final MouseAdapter mouse = new MouseAdapter() {        
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -92,7 +93,58 @@ public class UIPane{
                 }
             }
         }          
-    };
+    };    
+    */
+    
+    /**
+     * Place into MainGame's MouseAdapter.
+     * @param e 
+     */
+    public void mouseClicked(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+        if(x <= layout.col*size && y <= layout.row*size){
+            try{
+                int i = calculateMouseIndex(x,y);
+                System.out.println(i);
+            
+                GraphicButton curr = buttons[i];
+            
+                curr.update(buttons, i, GraphicButton.CLICKED);
+                
+                //repaint();
+                
+            } catch(ArrayIndexOutOfBoundsException aie){
+                System.out.println("Not an nxn matrix(not square)");
+            }
+        } 
+    }
+
+    /**
+     * Place into MainGame's MouseAdapter.
+     * @param e 
+     */
+    public void mouseMoved(MouseEvent e){
+        int x = e.getX();
+        int y = e.getY();            
+            
+        if(x <= layout.col*size && y <= layout.row*size){
+            try{
+                int mi = mouseIndex;
+                int i = calculateMouseIndex(x,y);
+                System.out.println(i);
+                
+                if(i != mi){
+                    GraphicButton curr = buttons[i];            
+                    curr.update(buttons, i, GraphicButton.HOVERING);
+                
+                    //repaint();
+                }
+            } catch(ArrayIndexOutOfBoundsException aie){
+                System.out.println("Not an nxn matrix(not square)");
+            }
+        }
+    } 
     
     /**
      * Calculates the index of the button being pressed.
@@ -101,7 +153,7 @@ public class UIPane{
      * @return 
      */
     private int calculateMouseIndex(int x, int y){
-        return mouseIndex = convertMatrixToVectorIndex((int)((y+size)/size), (int)((x+size)/size), layout.col) - 1; 
+        return mouseIndex = convertMatrixToVectorIndex((int)(((y-placement.y)+size)/size), (int)(((x-placement.x)+size)/size), layout.col) - 1; 
     }
     
     /**
@@ -146,7 +198,7 @@ public class UIPane{
             throw new IllegalArgumentException("Cannot have more items then matrix is able to hold.");
         }
         
-        this.dimension = new Dimension(layout.col*size, layout.row*size);
+        this.dimension = new Dimension((layout.col*size)+placement.x, (layout.row*size)+placement.y);
         
         buttons = new GraphicButton[TOTAL_ITEMS];
         
@@ -184,14 +236,49 @@ public class UIPane{
         }        
     }
     
+    /**
+     * For testing purposes.
+     */
+    public static class Test extends JPanel{
+        public UIPane pane;
+        
+        public Test() {
+            pane = new UIPane(23,100, new MatrixDimension(5,5), new Location(50,50));
+            
+            this.addMouseListener(mouse);
+            this.addMouseMotionListener(mouse);
+        }
+        
+        @Override
+        public void paintComponent(Graphics g){
+            pane.render((Graphics2D)g);
+        }
+        
+        private final MouseAdapter mouse = new MouseAdapter() {      
+            
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            pane.mouseClicked(e);
+            repaint();
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e){
+            pane.mouseMoved(e);
+            repaint();
+        }          
+    }; 
+        
+    }
+    
     public static void main(String[] args){
         JFrame frame = new JFrame("test");
         
-        UIPane pane = new UIPane(23,100, new MatrixDimension(5,5), new Location(0,0));
+        Test pane = new Test();
         
-        frame.setPreferredSize(pane.dimension);
+        frame.setPreferredSize(pane.pane.dimension);
         frame.setLayout(new GridLayout(1,1));
-        //frame.add(pane);
+        frame.add(pane);
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
