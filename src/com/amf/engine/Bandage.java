@@ -6,11 +6,9 @@ public class Bandage implements Item {
 
     @Override
     public void use(Survivor owner, Entity target, GridMap map) {
-        //if (ableToUseItem) {
+        if (owner.hasItemInInventory(this)/* && isValid*/) {
             owner.setHealth(Math.min(Survivor.MAX_HEALTH, owner.getHealth() + RECOVER));
-        //}
-        if (owner.getInventory()[0] != 0) {
-            owner.getInventory()[0] -= 1;
+            owner.removeItemFromInventory(this);
         }
     }
 

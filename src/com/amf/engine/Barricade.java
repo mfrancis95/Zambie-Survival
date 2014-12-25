@@ -10,7 +10,7 @@ public class Barricade extends Entity implements Item {
     }
     
     @Override
-    public void performAction(String action) {
+    public void performAction(Action action) {
         throw new UnsupportedOperationException("Not supported.");
     }
     
@@ -21,7 +21,10 @@ public class Barricade extends Entity implements Item {
 
     @Override
     public void use(Survivor owner, Entity target, GridMap map) {
-        //map.addTile(null, MAX_QUANTITY, MAX_QUANTITY);
+        if (owner.hasItemInInventory(this)/* && isValid*/) {
+            //map.addTile(null, MAX_QUANTITY, MAX_QUANTITY);
+            owner.removeItemFromInventory(this);
+        }
     }
     
 }

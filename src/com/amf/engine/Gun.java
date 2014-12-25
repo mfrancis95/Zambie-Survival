@@ -6,7 +6,10 @@ public class Gun implements Item {
 
     @Override
     public void use(Survivor owner, Entity target, GridMap map) {
-        target.setHealth(Math.max(0, target.getHealth() + DAMAGE));
+        if (owner.hasItemInInventory(this)/* && isValid*/) {
+            target.setHealth(Math.max(0, target.getHealth() + DAMAGE));
+            owner.removeItemFromInventory(this);
+        }
     }
 
 }
