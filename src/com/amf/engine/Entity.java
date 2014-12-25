@@ -66,7 +66,7 @@ public abstract class Entity implements Serializable {
         }
     }
     
-    public abstract void performAction(String action);
+    public abstract void performAction(Action action);
     
     public void render(Graphics2D g) {}
     
