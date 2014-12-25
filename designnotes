@@ -47,6 +47,10 @@ Basic Game:
     - Use: to protect a survivor
     - How: upon havin in inventory (can only have one in inventory (i.e. cannot pick up armor if Survivor already has it))
     - Notes: can drop this item(?). ItemDefense of 2
+  - Barricade
+    - Use: to block movement
+    - How: upon call to Barricade.use()
+    - Notes: Survivor places this down on map
 
 Extra Features:
 
