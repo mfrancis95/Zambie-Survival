@@ -36,6 +36,10 @@ public class Tileset {
         return height;
     }
     
+    public BufferedImage getFallbackTile() {
+        return fallback;
+    }
+    
     public BufferedImage getTile(Location location) {
         BufferedImage tile = tiles.get(location);
         return tile == null ? fallback : tile;

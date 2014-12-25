@@ -13,7 +13,7 @@ public class Location implements Serializable {
     public Location(int x, int y) {
         this.x = x;
         this.y = y;
-    }
+    }    
     
     public Location add(int x, int y) {
         return new Location(this.x + x, this.y + y);
@@ -53,6 +53,21 @@ public class Location implements Serializable {
     
     public boolean isAdjacentTo(Location location) {
         return Math.abs(x - location.x) + Math.abs(y - location.y) == 1;
+    }
+    
+    public Location next(Direction direction) {
+        switch (direction) {
+            case NORTH:
+                return add(0, 1);
+            case SOUTH:
+                return add(0, -1);
+            case EAST:
+                return add(1, 0);
+            case WEST:
+                return add(-1, 0);
+            default:
+                return null;
+        }
     }
     
 }
