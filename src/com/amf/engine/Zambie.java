@@ -7,8 +7,17 @@ import java.awt.Graphics2D;
 public class Zambie extends Entity {
     
     @Override
-    public void performAction(String action) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void performAction(Action action) {
+        switch (action) {
+            case ATTACK:
+                break;
+            case MOVE:
+                break;
+            case USE_ITEM:
+            case DO_NOTHING:
+            default:
+                break;
+        }
     }
     
     public void render(Graphics2D g) {

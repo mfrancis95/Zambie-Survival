@@ -8,16 +8,44 @@ public class Survivor extends Entity {
 
     //can it ever be full? Money/credit system???
     private Inventory inventory;
+
+    public static final int MAX_HEALTH = 100;
     
-    public String[] getInventory() {
+    public void addItemToInventory(Item item) {
+        inventory.addToInventory(item);
+    }
+
+    public int getAmountOfItem(Item item) {
+        return inventory.amountOfItem(item);
+    }
+
+    public int[] getInventory() {
         return inventory.arrayOfInventory();
     }
-    
-    @Override
-    public void performAction(String action) {
-        throw new UnsupportedOperationException("Not supported yet.");
+
+    public boolean hasItemInInventory(Item item) {
+        return inventory.containsItem(item);
     }
-    
+
+    @Override
+    public void performAction(Action action) {
+        switch (action) {
+            case ATTACK:
+                break;
+            case MOVE:
+                break;
+            case USE_ITEM:
+                break;
+            case DO_NOTHING:
+            default:
+                break;
+        }
+    }
+
+    public void removeItemFromInventory(Item item) {
+        inventory.removeItem(item);
+    }
+
     public void render(Graphics2D g) {
         g.setColor(Color.RED);
         Location location = getScreenLocation();
@@ -31,32 +59,49 @@ public class Survivor extends Entity {
 
     private class Inventory {
 
-        /* int representing the number of items of a certain kind
-         *defaulted to 10 unique items. Each item can go in specific spot.
-         *if no like, can switch back to HashMap. This way seems easier to handle 
-         given we have an invariant of which item goes where */
-        int[] inventory = new int[3];
+        private final int[] inventory = new int[10];
 
-        public void addToInventory(int index) {
+        public void addToInventory(Item item) {
+            int index = itemToInt(item);
             inventory[index] += 1;
         }
         
-        public String[] arrayOfInventory() {
-            throw new UnsupportedOperationException("Not supported yet.");
+        public int amountOfItem(Item item) {
+            int index = itemToInt(item);
+            return inventory[index];
         }
-        
-        public boolean containsItem(int index) {
+
+        public int[] arrayOfInventory() {
+            int[] copy = new int[inventory.length];
+            System.arraycopy(inventory, 0, copy, 0, copy.length);
+            return copy;
+        }
+
+        public boolean containsItem(Item item) {
+            int index = itemToInt(item);
             return inventory[index] != 0;
         }
-        
-        private void getInventory() {
-            throw new UnsupportedOperationException("Not supported yet.");
+
+        private int itemToInt(Item item) {
+            int convertTo = 0;
+            if (item instanceof Gun) {
+                convertTo = 1;
+            } else if (item instanceof BigGun) {
+                convertTo = 2;
+            }
+            else if (item instanceof Barricade) {
+                convertTo = 3;
+            }
+            return convertTo;
         }
-        
+
         //Assumes contains item was called already because idk if we 
         //want to do error handling
-        public void removeItem(int index) {
-            inventory[index] -= 1;
+        public void removeItem(Item item) {
+            int index = itemToInt(item);
+            if (inventory[index] != 0) {
+                inventory[index] -= 1;
+            }
         }
 
     }
