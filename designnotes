@@ -1,1 +1,52 @@
 Design Notes
+
+filled in arbitrary numbers that can be changed. Everyhting may be changed. These are just ideas that need full group approval
+Please fill-in anything that is missing/change what is incorrect.
+Basic Game:
+
+- Damage calculation: (Attack - Defense + ItemPower - ItemDefense) * Multiplier
+- Multiplier: 1 - (HungarMultiplier + ThirstMultiplier) //Multiplier set to 1 in basic game
+^^ Can be changed. Any randomness wanted?
+
+- Entities:
+  - Normal Zambie (Zambie)
+    - Max health: 75
+    - Defense: 0
+    - Attack: 10
+  - Item Zambie (ItemZambie)
+    - Max health: 75
+    - Defense: 1
+    - Attack: 10
+    - Drops a random item upon defeat
+  - Survivor (Survivor)
+    - Max health: 100
+    - Defense: 0
+    - Attack: 5 (can attack without item?)
+    - Has an inventory and may use items
+  - 1 type of Barricade (Barricade)
+    - Max health: 50
+    - Defense: 5
+    - Attack: 0
+
+- Items:
+  - Bandage
+    - Use: to recover user's damage
+    - How: with a call to Bandage.use()
+    - Notes: recovers 5 health immediately, ensuring maximum health cannot go above maximum health
+  - Gun
+    - Use: to damage a zambie
+    - How: with a call to Gun.use()
+    - Notes: calculates damage with the above formula with ItemPower of 5
+  - BigGun
+   - Use: to damage a zambie
+   - How: with a call to BigGun.use()
+   - Notes: calculates damage with above formula with ItemPower of 10. Causes recoil (i.e. survivor moves back one space). If
+      the Survivor is on the edge of the Map or there is an entity behind it, does not move. If there is an item on the spot it 
+      recoils to, the Survivior picks up the item
+  - Armor
+    - Use: to protect a survivor
+    - How: upon havin in inventory (can only have one in inventory (i.e. cannot pick up armor if Survivor already has it))
+    - Notes: can drop this item(?). ItemDefense of 2
+
+Extra Features:
+
