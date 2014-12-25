@@ -1,5 +1,6 @@
 package com.amf.engine;
 
+//make more methods Unsupported!
 public class Barricade extends Entity implements Item {
     
     public static final int MAX_QUANTITY = 5;
