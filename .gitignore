@@ -13,3 +13,6 @@ build/classes/.netbeans_update_resources
 
 *.properties
 /dist/
+src/com/amf/gamemanager/Pathfinder.java
+
+src/com/amf/gamemanager/TurnManager.java

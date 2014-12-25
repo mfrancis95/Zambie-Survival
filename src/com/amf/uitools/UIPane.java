@@ -103,7 +103,8 @@ public class UIPane{
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
         int y = e.getY();
-        if(x <= layout.col*size && y <= layout.row*size){
+        if(x <= (layout.col*size)+placement.x && y <= (layout.row*size)+placement.y &&
+            x >= placement.x && y >= placement.y){
             try{
                 int i = calculateMouseIndex(x,y);
                 System.out.println(i);
@@ -115,7 +116,7 @@ public class UIPane{
                 //repaint();
                 
             } catch(ArrayIndexOutOfBoundsException aie){
-                System.out.println("Not an nxn matrix(not square)");
+                //System.out.println("Not an nxn matrix(not square)");
             }
         } 
     }
@@ -128,7 +129,8 @@ public class UIPane{
         int x = e.getX();
         int y = e.getY();            
             
-        if(x <= layout.col*size && y <= layout.row*size){
+        if(x <= (layout.col*size)+placement.x && y <= (layout.row*size)+placement.y &&
+            x >= placement.x && y >= placement.y){
             try{
                 int mi = mouseIndex;
                 int i = calculateMouseIndex(x,y);
@@ -141,7 +143,7 @@ public class UIPane{
                     //repaint();
                 }
             } catch(ArrayIndexOutOfBoundsException aie){
-                System.out.println("Not an nxn matrix(not square)");
+                //System.out.println("Not an nxn matrix(not square)");
             }
         }
     } 
@@ -157,9 +159,12 @@ public class UIPane{
     }
     
     /**
+     * Works differently from the method in MatrixDimension Class.
      * Converts a matrix index to a vector index.
      * @param row
+     * Can be from 1 to n.
      * @param col
+     * Can be from 0 to n-1.
      * @param maxcol
      * @return 
      */
@@ -230,7 +235,7 @@ public class UIPane{
                 try{
                     buttons[z].drawButtonIcon(g, new Location(placement.x+(c*size), placement.y+(r*size)));
                 } catch(ArrayIndexOutOfBoundsException aie){
-                    System.out.println("Not an nxn matrix(not square)");
+                    //System.out.println("Not an nxn matrix(not square)");
                 }
             }
         }        
@@ -241,9 +246,11 @@ public class UIPane{
      */
     public static class Test extends JPanel{
         public UIPane pane;
+        public UIPane otherpane;
         
         public Test() {
-            pane = new UIPane(23,100, new MatrixDimension(5,5), new Location(50,50));
+            pane = new UIPane(3,100, new MatrixDimension(3,1), new Location(0,0));
+            otherpane = new UIPane(5,100,new MatrixDimension(5,1), new Location(100,0));
             
             this.addMouseListener(mouse);
             this.addMouseMotionListener(mouse);
@@ -252,6 +259,7 @@ public class UIPane{
         @Override
         public void paintComponent(Graphics g){
             pane.render((Graphics2D)g);
+            otherpane.render((Graphics2D)g);
         }
         
         private final MouseAdapter mouse = new MouseAdapter() {      
@@ -259,12 +267,16 @@ public class UIPane{
         @Override
         public void mouseClicked(MouseEvent e) {
             pane.mouseClicked(e);
+            //repaint();
+            otherpane.mouseClicked(e);
             repaint();
         }
 
         @Override
         public void mouseMoved(MouseEvent e){
             pane.mouseMoved(e);
+            //repaint();
+            otherpane.mouseMoved(e);
             repaint();
         }          
     }; 
@@ -276,7 +288,7 @@ public class UIPane{
         
         Test pane = new Test();
         
-        frame.setPreferredSize(pane.pane.dimension);
+        frame.setPreferredSize(new Dimension(720,480));
         frame.setLayout(new GridLayout(1,1));
         frame.add(pane);
         
