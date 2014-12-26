@@ -4,35 +4,69 @@ filled in arbitrary numbers that can be changed. Everyhting may be changed. Thes
 Please fill-in anything that is missing/change what is incorrect.
 Basic Game:
 
-- Damage calculation: (Attack - Defense + ItemPower - ItemDefense) * Multiplier
-- Multiplier: 1 - (HungarMultiplier + ThirstMultiplier) //Multiplier set to 1 in basic game
-^^ Can be changed. Any randomness wanted?
+- Damage calculation: 
+  - ([this.Attack + this.ItemPower] / [other.Defence + other.ItemDefense]) * Multiplier * Random
+- Multiplier: 1 - ([Current Hunger/Total Hunger] + [Current Thirst/Total Thirst]) //Multiplier set to 1 in basic game
+  - Hunger & Thirst can be scaled from 1-10.
+  - If too hungry or too thirsty the survivor.
+  - Zambie does not have multiplier, so same calculation without multiplier.
+- Random: 
+  -- first roll: if randomValue <= 0.5 then miss; else roll again for damage
+  -- second roll: return (randomValue*0.3)+0.7;
+^^ Can be changed. Any randomness wanted? 
+  - yes so its not always hitting the same damage.
+  - Could be set so that you either miss or hit 70%+ of your damage.
 
 - Entities:
   - Normal Zambie (Zambie)
     - Max health: 75
-    - Defense: 0
+    - Defense: 1 -- Defence cannot be 0.
     - Attack: 10
   - Item Zambie (ItemZambie)
     - Max health: 75
-    - Defense: 1
+    - Defense: 1 -- Defence cannot be 0.
     - Attack: 10
     - Drops a random item upon defeat
   - Survivor (Survivor)
     - Max health: 100
-    - Defense: 0
-    - Attack: 5 (can attack without item?)
+    - Defense: 1 -- Defence cannot be 0.
+    - Attack: 5 (can attack without item?
     - Has an inventory and may use items
+    - Will we need a worn inventory/equip item mode or will survivors automatically use the items in the inventory?
   - 1 type of Barricade (Barricade)
     - Max health: 50
     - Defense: 5
     - Attack: 0
+  - Zambie Encampments
+    - Max health - 1.
+      - If zombie located on top, must kill zambie first. Then you will be able to capture the encampment in one turn. 
+    - Randomly spawned every 3-20 turns
+    - Spawned at a random coordinate >5 tiles away from player encampment
+    - Random spawns a Zambie every 3-10 turns
+  - Player Encampments
+    - Tile(s) where the player spawns on
+    - Marks the starting position -- radius in which Zambie encampments cannot spawn!!!!
+    - If we decide to make some sort of way to collect scrap metal/currency and bring it back to base
+        this will be the location of where everything is assembled and made.
+    
 
 - Items:
   - Bandage
     - Use: to recover user's damage
     - How: with a call to Bandage.use()
     - Notes: recovers 5 health immediately, ensuring maximum health cannot go above maximum health
+  - Medkit
+    - Use: to recover user and surround teammate's damage
+    - How: calls Medkit.use()
+    - Notes: similar to bangage except it heals everyone within a 1 tile radius, damages zombies within 1 tile radius.
+  -Food(generic, can create more later on)
+    - Use: to recover hunger
+    - How: calls Food.use()
+    - Notes: heals hunger by 1.
+  -Water/Drink(generic, can create more)
+    - Use: to recover thirst
+    - How: calls Water.use()
+    Notes: heals thirst by 1.
   - Gun
     - Use: to damage a zambie
     - How: with a call to Gun.use()
@@ -43,6 +77,10 @@ Basic Game:
    - Notes: calculates damage with above formula with ItemPower of 10. Causes recoil (i.e. survivor moves back one space). If
       the Survivor is on the edge of the Map or there is an entity behind it, does not move. If there is an item on the spot it 
       recoils to, the Survivior picks up the item
+  - Ammunition? - Will we need ammo to shoot the guns; if you don't have ammo you can use gun as club.
+    - Use: To provide ammo for the Gun and BigGun
+    - How: calls Ammo.use() -- decrements the amount of ammo; if zero deletes item.
+  - Melee Weapon/Club/Sword? - Defaults all weapons to some sort of melee weapon if it runs out of ammo.
   - Armor
     - Use: to protect a survivor
     - How: upon havin in inventory (can only have one in inventory (i.e. cannot pick up armor if Survivor already has it))
@@ -52,5 +90,4 @@ Basic Game:
     - How: upon call to Barricade.use()
     - Notes: Survivor places this down on map
 
-Extra Features:
 
