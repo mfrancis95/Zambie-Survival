@@ -1,4 +1,4 @@
-package com.amf.engine;
+package main.java.org.zambiesurvival.engine;
 
 import java.awt.Graphics2D;
 import java.awt.event.KeyListener;

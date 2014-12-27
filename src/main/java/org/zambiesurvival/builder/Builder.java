@@ -1,8 +1,5 @@
-package com.amf.builder;
+package main.java.org.zambiesurvival.builder;
 
-import com.amf.engine.GridMap;
-import com.amf.engine.Location;
-import com.amf.engine.Tileset;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,6 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -26,51 +25,67 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import main.java.org.zambiesurvival.engine.ImageSheet;
+import main.java.org.zambiesurvival.engine.Location;
 
 public class Builder extends JFrame {
     
-    private JFileChooser chooser = new JFileChooser();
+    private final JFileChooser chooser = new JFileChooser();
     
-    private GridMap map = new GridMap(32);
+    private Location hoverTile = new Location(0, 0), selectedTile = new Location(0, 0);
     
-    private final Tileset tileset = new Tileset("tileset.png", 32);
+    private Map<Location, Location> map = new HashMap<>();
     
-    private Location hoverTile = new Location(0, 0);
+    private final ImageSheet tileset = ImageSheet.load("Tileset.png", 32);
     
-    private Location selectedTile = new Location(0, 0);
+    private final Timer timer;
     
-    private final ActionListener action = (ActionEvent e) -> {
-        switch (e.getActionCommand()) {
-            case "New Map":
-                map = new GridMap(32);
-                break;
-            case "Load Map":
-                if (chooser.showOpenDialog(Builder.this) == JFileChooser.APPROVE_OPTION) {
-                    try {
-                        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
-                        map = (GridMap) ois.readObject();
-                        ois.close();
+    private final JButton newMapButton = new JButton("New Map");
+    private final JButton loadMapButton = new JButton("Load Map");
+    private final JButton saveMapButton = new JButton("Save Map");
+    private final JButton quitButton = new JButton("Quit");
+    
+    private final ActionListener action = new ActionListener() {
+
+        public void actionPerformed(ActionEvent e) {
+            switch (e.getActionCommand()) {
+                case "New Map":
+                    map = new HashMap<>();
+                    break;
+                case "Load Map":
+                    if (chooser.showOpenDialog(Builder.this) == JFileChooser.APPROVE_OPTION) {
+                        try {
+                            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(chooser.getSelectedFile()));
+                            map = (HashMap<Location, Location>) ois.readObject();
+                            ois.close();
+                        }
+                        catch (Exception ex) {
+                            JOptionPane.showMessageDialog(Builder.this, ex);
+                        }
                     }
-                    catch (Exception ex) {
-                        JOptionPane.showMessageDialog(Builder.this, ex);
+                    break;
+                case "Save Map":
+                    if (chooser.showSaveDialog(Builder.this) == JFileChooser.APPROVE_OPTION) {
+                        try {
+                            String fileName = chooser.getSelectedFile().toString();
+                            if (!fileName.endsWith(".zsm")) {
+                                fileName += ".zsm";
+                            }
+                            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
+                            oos.writeObject(map);
+                            oos.close();
+                        }
+                        catch (IOException ex) {
+                            JOptionPane.showMessageDialog(Builder.this, ex);
+                        }
                     }
-                }
-                break;
-            case "Save Map":
-                if (chooser.showSaveDialog(Builder.this) == JFileChooser.APPROVE_OPTION) {
-                    try {
-                        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(chooser.getSelectedFile().toString() + ".zsm"));
-                        oos.writeObject(map);
-                        oos.close();
-                    }
-                    catch (IOException ex) {
-                        JOptionPane.showMessageDialog(Builder.this, ex);
-                    }
-                }
-                break;
-            case "Quit":
-                System.exit(0);
+                    break;
+                case "Quit":
+                    System.exit(0);
+            }
         }
     };
     
@@ -86,12 +101,11 @@ public class Builder extends JFrame {
         }
         
         public void mousePressed(MouseEvent me) {
-            Location location = new Location(me.getX() / 32, me.getY() / 32);
             if (SwingUtilities.isLeftMouseButton(me)) {
-                map.addTile(selectedTile, location.x, location.y);
+                map.put(hoverTile, selectedTile);
             }
             else {
-                map.removeTile(location.x, location.y);
+                map.remove(hoverTile);
             }
         }
         
@@ -101,19 +115,12 @@ public class Builder extends JFrame {
         
         public void mousePressed(MouseEvent me) {
             Location location = new Location(me.getX() / 32, me.getY() / 32);
-            if (tileset.getTile(location) != tileset.getFallbackTile()) {
+            if (tileset.getImage(location) != tileset.getFallbackImage()) {
                 selectedTile = location;
             }
         }
         
     };
-    
-    private final Timer timer;
-    
-    private final JButton newMapButton = new JButton("New Map");
-    private final JButton loadMapButton = new JButton("Load Map");
-    private final JButton saveMapButton = new JButton("Save Map");
-    private final JButton quitButton = new JButton("Quit");
     
     public Builder() {
         super("Zambie Survival Map Builder");
@@ -157,8 +164,8 @@ public class Builder extends JFrame {
         
         public void paintComponent(Graphics bork) {
             Graphics2D g = (Graphics2D) bork;
-            for (Location l : map.getTileLocations()) {
-                g.drawImage(tileset.getTile(map.getTile(l)), null, l.x * 32, l.y * 32);
+            for (Location l : map.keySet()) {
+                g.drawImage(tileset.getImage(map.get(l)), null, l.x * 32, l.y * 32);
             }
             g.setColor(Color.GRAY);
             for (int x = 0; x < 640; x += 32) {
@@ -183,8 +190,8 @@ public class Builder extends JFrame {
         
         public void paintComponent(Graphics bork) {
             Graphics2D g = (Graphics2D) bork;
-            for (Location l : tileset.getTileLocations()) {
-                g.drawImage(tileset.getTile(l), null, l.x * 32, l.y * 32);
+            for (Location l : tileset.getImageLocations()) {
+                g.drawImage(tileset.getImage(l), null, l.x * 32, l.y * 32);
             }
             g.setColor(Color.RED);
             g.setStroke(new BasicStroke(2));
@@ -193,6 +200,15 @@ public class Builder extends JFrame {
     }
     
     public static void main(String[] args) {
+        try {
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if (info.getName().equals("Nimbus")) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } 
+        catch (Exception ex) {}
         new Builder();
     }
     

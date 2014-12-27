@@ -1,8 +1,9 @@
-package com.amf.engine;
+package main.java.org.zambiesurvival.engine;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
@@ -56,7 +57,9 @@ public class GameContainer {
         public void paintComponent(Graphics bork) {
             super.paintComponent(bork);
             Graphics2D g = (Graphics2D) bork;
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             game.render(g);
+            g.dispose();
         }
         
     }

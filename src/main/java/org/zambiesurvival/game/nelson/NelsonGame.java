@@ -1,8 +1,8 @@
 package com.amf.game.nelson;
 
 import com.amf.engine.Location;
-import com.amf.engine.GridMap;
-import com.amf.engine.Tileset;
+import com.amf.engine.World;
+import com.amf.engine.ImageSheet;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,11 +20,11 @@ import javax.swing.Timer;
 
 public class NelsonGame extends JFrame {
     
-    private GridMap<Point> map = new GridMap<>(32);
+    private World<Point> map = new World<>(32);
     
     private Point player = new Point(64, 64);
     
-    private Tileset tileset = new Tileset("tileset.png", 32);
+    private ImageSheet tileset = new ImageSheet("tileset.png", 32);
     
     private boolean moving = false, selected = false;
     
