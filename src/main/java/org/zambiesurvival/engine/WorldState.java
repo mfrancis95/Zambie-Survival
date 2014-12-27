@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import main.java.org.zambiesurvival.engine.entity.Barricade;
 
 public class WorldState extends GameStateAdapter {
 
@@ -51,6 +52,8 @@ public class WorldState extends GameStateAdapter {
         entities = new ArrayList<>();
         addEntity(new Location(5, 7), new Survivor());
         addEntity(new Location(14, 7), new Survivor());
+        addEntity(new Location(6, 7), new Barricade());
+        addEntity(new Location(13, 7), new Barricade());
         for (int i = 0; i < 10; i++) {
             Location location = new Location((int) (Math.random() * 20), (int) (Math.random() * 15));
             while (getEntity(location) != null) {
@@ -150,6 +153,9 @@ public class WorldState extends GameStateAdapter {
         }
         else {
             currentEntity = currentEntity == entities.size() - 1 ? 0 : currentEntity + 1;
+            while (entities.get(currentEntity).getActions() == 0) {
+                currentEntity = currentEntity == entities.size() - 1 ? 0 : currentEntity + 1;
+            }
             currentEntityActions = 0;
         }
     }
