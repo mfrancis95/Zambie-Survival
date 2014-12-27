@@ -5,7 +5,6 @@ import main.java.org.zambiesurvival.engine.Direction;
 import main.java.org.zambiesurvival.engine.Location;
 import main.java.org.zambiesurvival.engine.WorldState;
 import main.java.org.zambiesurvival.engine.item.Item;
-import main.java.org.zambiesurvival.engine.item.Weapon;
 
 public abstract class Entity {
     
@@ -20,6 +19,8 @@ public abstract class Entity {
     protected Location mapLocation, screenLocation;
     
     protected boolean moving, passing;
+    
+    public final int MAX_HEALTH = 100;
     
     public Entity(int actions) {
         this.actions = actions;
@@ -105,19 +106,19 @@ public abstract class Entity {
     
     protected class Inventory {
         
-        //Set to 10 for now since the designnotes has 10 unique items
-        //Bandage, MedKit, Food, Drank, Gun, BigGun, Ammo, Melee Weapon, Armor, Barricade
-        private final int[] inventory = new int[10];
+        //Set to 11 for now since the designnotes has 11 unique items
+        //Bandage, MedKit, Food, Drank, Gun, BigGun, Ammo, Melee Weapon, Armor, Barricade, Healthtotem
+        private final int[] inventory = new int[11];
         
         public boolean addItem(Item item) {
-            if (item instanceof Weapon) {
-                return true;
-            }
             return false;
         }
         
+        public boolean contains(Item item) {
+            return inventory[getIndexOfItem(item)] != 0;
+        }
+        
         private int getIndexOfItem(Item item) {
-            int index = 0;
             return 0;
         }
         
