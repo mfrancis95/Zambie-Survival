@@ -1,13 +1,29 @@
 package main.java.org.zambiesurvival.engine.item;
 
-import main.java.org.zambiesurvival.engine.WorldState;
 import main.java.org.zambiesurvival.engine.entity.Entity;
-import main.java.org.zambiesurvival.engine.entity.Survivor;
 
-public abstract class Item {
+public abstract class Item extends Entity {
     
-    private int defense, power;
+    protected int defense, power;
 
-    public abstract void use(Survivor owner, Entity target, WorldState world);
+    public Item() {
+        super(0);
+    }
+    
+    public int getDefense() {
+        return defense;
+    }
+    
+    public int getPower() {
+        return power;
+    }
+    
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+    
+    public void setPower(int power) {
+        this.power = power;
+    }
     
 }
