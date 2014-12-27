@@ -15,3 +15,5 @@ build/classes/.netbeans_update_resources
 
 
 dist/javadoc/com/amf/game/nelson/NelsonGame.html
+/nbproject/private/
+/build/
