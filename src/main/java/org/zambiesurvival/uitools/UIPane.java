@@ -247,10 +247,12 @@ public class UIPane{
     public static class Test extends JPanel{
         public UIPane pane;
         public UIPane otherpane;
+        public UIPane anotherpane;
         
         public Test() {
             pane = new UIPane(3,100, new MatrixDimension(3,1), new Location(0,0));
             otherpane = new UIPane(5,100,new MatrixDimension(5,1), new Location(100,0));
+            anotherpane = new UIPane(10,100,new MatrixDimension(3,4), new Location(200,0));
             
             this.addMouseListener(mouse);
             this.addMouseMotionListener(mouse);
@@ -260,6 +262,7 @@ public class UIPane{
         public void paintComponent(Graphics g){
             pane.render((Graphics2D)g);
             otherpane.render((Graphics2D)g);
+            anotherpane.render((Graphics2D)g);
         }
         
         private final MouseAdapter mouse = new MouseAdapter() {      
@@ -269,6 +272,7 @@ public class UIPane{
             pane.mouseClicked(e);
             //repaint();
             otherpane.mouseClicked(e);
+            anotherpane.mouseClicked(e);
             repaint();
         }
 
@@ -277,6 +281,7 @@ public class UIPane{
             pane.mouseMoved(e);
             //repaint();
             otherpane.mouseMoved(e);
+            anotherpane.mouseMoved(e);
             repaint();
         }          
     }; 
@@ -296,6 +301,5 @@ public class UIPane{
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        
     }
 }
