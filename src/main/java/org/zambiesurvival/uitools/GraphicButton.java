@@ -103,8 +103,10 @@ public class GraphicButton{
      * Index of the state being updated.
      * @param state 
      * State to update the particular index to.
+     * @param onMove
+     * True if operates when the mouse moves else false.
      */
-    public void update(GraphicButton[] g, int selfIndex, int state){
+    public void update(GraphicButton[] g, int selfIndex, int state, boolean onMove){
         for(int i=0;i<g.length;i++){
             if(i == selfIndex){
                 g[i].setState(state);
@@ -118,6 +120,9 @@ public class GraphicButton{
                 else{
                     System.out.println("State is nothing, does not execute any command");
                 }               
+            }
+            else if(g[i].getState() == CLICKED && onMove){
+                System.out.println("GraphicButton["+i+"]"+" is clicked and does not update on hover.");
             }
             else{
                 g[i].setState(NOTHING);
