@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class WorldState extends GameStateAdapter {
 
-    private int currentEntity;
+    private int currentEntity, currentEntityActions;
 
     private List<Entity> entities;
 
@@ -44,6 +44,7 @@ public class WorldState extends GameStateAdapter {
     }
 
     public void init() {
+        currentEntity = currentEntityActions = 0;
         tileset = ImageSheet.load("Tileset.png", 32);
         ImageSheet.load("Survivor.png", 32);
         ImageSheet.load("Zambies.png", 32);
@@ -81,6 +82,8 @@ public class WorldState extends GameStateAdapter {
                 case KeyEvent.VK_RIGHT:
                     entity.setDestination(Direction.EAST);
                     break;
+                case KeyEvent.VK_P:
+                    entity.pass();
                 default:
             }
         }
@@ -114,35 +117,41 @@ public class WorldState extends GameStateAdapter {
 
     public void update(Game game) {
         Entity entity = entities.get(currentEntity);
-        if (entity.isMoving()) {
-            Location mapLocation = entity.getMapLocation();
-            Location screenLocation = entity.getScreenLocation();
-            int destinationScreenX = mapLocation.x * 32;
-            int destinationScreenY = mapLocation.y * 32 - 8;
-            if (screenLocation.x < destinationScreenX) {
-                entity.setScreenLocation(screenLocation.add(1, 0));
+        if (currentEntityActions < entity.getActions()) {
+            if (entity.isMoving()) {
+                Location mapLocation = entity.getMapLocation();
+                Location screenLocation = entity.getScreenLocation();
+                int destinationScreenX = mapLocation.x * 32;
+                int destinationScreenY = mapLocation.y * 32 - 8;
+                if (screenLocation.x < destinationScreenX) {
+                    entity.setScreenLocation(screenLocation.add(1, 0));
+                } 
+                else if (screenLocation.x > destinationScreenX) {
+                    entity.setScreenLocation(screenLocation.add(-1, 0));
+                }
+                if (screenLocation.y < destinationScreenY) {
+                    entity.setScreenLocation(screenLocation.add(0, 1));
+                } 
+                else if (screenLocation.y > destinationScreenY) {
+                    entity.setScreenLocation(screenLocation.add(0, -1));
+                }
+                if (screenLocation.x == destinationScreenX && screenLocation.y == destinationScreenY) {
+                    entity.endAction();
+                    currentEntityActions++;
+                }      
+            }
+            else if (entity.isPassing()) {
+                entity.endAction();
+                currentEntityActions = Integer.MAX_VALUE;
+            }
+            else {
+                entity.update(this);
             } 
-            else if (screenLocation.x > destinationScreenX) {
-                entity.setScreenLocation(screenLocation.add(-1, 0));
-            }
-            if (screenLocation.y < destinationScreenY) {
-                entity.setScreenLocation(screenLocation.add(0, 1));
-            } 
-            else if (screenLocation.y > destinationScreenY) {
-                entity.setScreenLocation(screenLocation.add(0, -1));
-            }
-            if (screenLocation.x == destinationScreenX && screenLocation.y == destinationScreenY) {
-                entity.endTurn();
-                currentEntity = currentEntity == entities.size() - 1 ? 0 : currentEntity + 1;
-            }
         }
-        else if (entity.isPassing()) {
-            entity.endTurn();
-            currentEntity = currentEntity == entities.size() - 1 ? 0 : currentEntity + 1;
-        } 
         else {
-            entity.update(this);
-        }       
-    } 
+            currentEntity = currentEntity == entities.size() - 1 ? 0 : currentEntity + 1;
+            currentEntityActions = 0;
+        }
+    }
 
 }

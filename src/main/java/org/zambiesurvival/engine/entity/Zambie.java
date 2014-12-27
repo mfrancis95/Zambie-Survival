@@ -14,6 +14,10 @@ public class Zambie extends Entity {
     
     private final ImageSheet sprites = ImageSheet.get("Zambies.png");
     
+    public Zambie() {
+        super(1);
+    }
+    
     public void render(Graphics2D g) {
         int x;
         if (animationTicks++ < 30) {
