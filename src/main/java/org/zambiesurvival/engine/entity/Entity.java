@@ -9,6 +9,8 @@ import main.java.org.zambiesurvival.engine.item.Weapon;
 
 public abstract class Entity {
     
+    protected final int actions;
+    
     protected Direction destination, direction = Direction.SOUTH;
     
     protected int health = 100;
@@ -19,9 +21,17 @@ public abstract class Entity {
     
     protected boolean moving, passing;
     
-    public void endTurn() {
+    public Entity(int actions) {
+        this.actions = actions;
+    }
+    
+    public void endAction() {
         moving = false;
         passing = false;
+    }
+    
+    public int getActions() {
+        return actions;
     }
     
     public Direction getDestination() {

@@ -11,10 +11,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import main.java.org.zambiesurvival.engine.entity.Barricade;
 
 public class WorldState extends GameStateAdapter {
 
-    private int currentEntity;
+    private int currentEntity, currentEntityActions;
 
     private List<Entity> entities;
 
@@ -44,12 +45,15 @@ public class WorldState extends GameStateAdapter {
     }
 
     public void init() {
+        currentEntity = currentEntityActions = 0;
         tileset = ImageSheet.load("Tileset.png", 32);
         ImageSheet.load("Survivor.png", 32);
         ImageSheet.load("Zambies.png", 32);
         entities = new ArrayList<>();
         addEntity(new Location(5, 7), new Survivor());
         addEntity(new Location(14, 7), new Survivor());
+        addEntity(new Location(6, 7), new Barricade());
+        addEntity(new Location(13, 7), new Barricade());
         for (int i = 0; i < 10; i++) {
             Location location = new Location((int) (Math.random() * 20), (int) (Math.random() * 15));
             while (getEntity(location) != null) {
@@ -81,6 +85,8 @@ public class WorldState extends GameStateAdapter {
                 case KeyEvent.VK_RIGHT:
                     entity.setDestination(Direction.EAST);
                     break;
+                case KeyEvent.VK_P:
+                    entity.pass();
                 default:
             }
         }
@@ -114,35 +120,44 @@ public class WorldState extends GameStateAdapter {
 
     public void update(Game game) {
         Entity entity = entities.get(currentEntity);
-        if (entity.isMoving()) {
-            Location mapLocation = entity.getMapLocation();
-            Location screenLocation = entity.getScreenLocation();
-            int destinationScreenX = mapLocation.x * 32;
-            int destinationScreenY = mapLocation.y * 32 - 8;
-            if (screenLocation.x < destinationScreenX) {
-                entity.setScreenLocation(screenLocation.add(1, 0));
-            } 
-            else if (screenLocation.x > destinationScreenX) {
-                entity.setScreenLocation(screenLocation.add(-1, 0));
+        if (currentEntityActions < entity.getActions()) {
+            if (entity.isMoving()) {
+                Location mapLocation = entity.getMapLocation();
+                Location screenLocation = entity.getScreenLocation();
+                int destinationScreenX = mapLocation.x * 32;
+                int destinationScreenY = mapLocation.y * 32 - 8;
+                if (screenLocation.x < destinationScreenX) {
+                    entity.setScreenLocation(screenLocation.add(1, 0));
+                } 
+                else if (screenLocation.x > destinationScreenX) {
+                    entity.setScreenLocation(screenLocation.add(-1, 0));
+                }
+                if (screenLocation.y < destinationScreenY) {
+                    entity.setScreenLocation(screenLocation.add(0, 1));
+                } 
+                else if (screenLocation.y > destinationScreenY) {
+                    entity.setScreenLocation(screenLocation.add(0, -1));
+                }
+                if (screenLocation.x == destinationScreenX && screenLocation.y == destinationScreenY) {
+                    entity.endAction();
+                    currentEntityActions++;
+                }      
             }
-            if (screenLocation.y < destinationScreenY) {
-                entity.setScreenLocation(screenLocation.add(0, 1));
-            } 
-            else if (screenLocation.y > destinationScreenY) {
-                entity.setScreenLocation(screenLocation.add(0, -1));
+            else if (entity.isPassing()) {
+                entity.endAction();
+                currentEntityActions = Integer.MAX_VALUE;
             }
-            if (screenLocation.x == destinationScreenX && screenLocation.y == destinationScreenY) {
-                entity.endTurn();
+            else {
+                entity.update(this);
+            } 
+        }
+        else {
+            currentEntity = currentEntity == entities.size() - 1 ? 0 : currentEntity + 1;
+            while (entities.get(currentEntity).getActions() == 0) {
                 currentEntity = currentEntity == entities.size() - 1 ? 0 : currentEntity + 1;
             }
+            currentEntityActions = 0;
         }
-        else if (entity.isPassing()) {
-            entity.endTurn();
-            currentEntity = currentEntity == entities.size() - 1 ? 0 : currentEntity + 1;
-        } 
-        else {
-            entity.update(this);
-        }       
-    } 
+    }
 
 }

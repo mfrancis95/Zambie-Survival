@@ -48,6 +48,12 @@ Basic Game:
     - Marks the starting position -- radius in which Zambie encampments cannot spawn!!!!
     - If we decide to make some sort of way to collect scrap metal/currency and bring it back to base
         this will be the location of where everything is assembled and made.
+  -ItemEntity
+    -Entity which encapsulates one type of item(can have multiple quantities though)
+    -When an entity steps over it takes the items in ItemEntity and places it in the entity's inventory.
+    -If there is an ItemEntity on the ground and the Survivor/Zambie's inventory is full, it can step onto it
+      either by destroying the entity or by having the GridMap support two different types of Entities on the map:
+        -Encampment/Item Entities & Survivor/Zambie Entities.
     
 
 - Items:
@@ -90,4 +96,19 @@ Basic Game:
     - How: upon call to Barricade.use()
     - Notes: Survivor places this down on map
 
+Dennis's Notes:
 
+abstract class Item extends Entity 
+(This is because an item is both an object on the map and something that can be in your inventory).
+- abstract class HealingItem extends Item. Has a method called heal(WorldState world, Survivor survivor).
+  - class BandageItem extends HealingItem
+  - then a bunch of other misc. healing items that extend this.
+- abstract class SpawningItem extends Item. Has a method called spawn(WorldState world, Direction direction).
+  - class BarricadeItem extends SpawningItem
+  - health totem?
+  
+Forget the concept of Item having a use() method. WorldState will handle the using of the item. 
+WorldState will check which item is being used (instanceof HealingItem, instanceof SpawningItem, etc.) 
+and call its appropriate unique method that it has.
+If you're trying to use a Bandage, WorldState will first check if this Item is actually a HealingItem. 
+If it is, it'll cast it to HealingItem and call heal.
