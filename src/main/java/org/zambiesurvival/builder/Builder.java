@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -38,6 +39,8 @@ public class Builder extends JFrame {
     private Location hoverTile = new Location(0, 0), selectedTile = new Location(0, 0);
     
     private Map<Location, Location> map = new HashMap<>();
+    
+    private final Stroke stroke = new BasicStroke(2);
     
     private final ImageSheet tileset = ImageSheet.load("Tileset.png", 32);
     
@@ -97,7 +100,8 @@ public class Builder extends JFrame {
         }
         
         public void mouseMoved(MouseEvent me) {
-            hoverTile = new Location(me.getX() / 32, me.getY() / 32);
+            int tileSize = tileset.getTileSize();
+            hoverTile = new Location(me.getX() / tileSize, me.getY() / tileSize);
         }
         
         public void mousePressed(MouseEvent me) {
@@ -114,7 +118,8 @@ public class Builder extends JFrame {
     private final MouseListener tilesetMouse = new MouseAdapter() {
         
         public void mousePressed(MouseEvent me) {
-            Location location = new Location(me.getX() / 32, me.getY() / 32);
+            int tileSize = tileset.getTileSize();
+            Location location = new Location(me.getX() / tileSize, me.getY() / tileSize);
             if (tileset.getImage(location) != tileset.getFallbackImage()) {
                 selectedTile = location;
             }
@@ -164,19 +169,20 @@ public class Builder extends JFrame {
         
         public void paintComponent(Graphics bork) {
             Graphics2D g = (Graphics2D) bork;
-            for (Location l : map.keySet()) {
-                g.drawImage(tileset.getImage(map.get(l)), null, l.x * 32, l.y * 32);
+            int tileSize = tileset.getTileSize();
+            for (Location location : map.keySet()) {
+                g.drawImage(tileset.getImage(map.get(location)), null, location.x * tileSize, location.y * tileSize);
             }
             g.setColor(Color.GRAY);
-            for (int x = 0; x < 640; x += 32) {
+            for (int x = 0; x < 640; x += tileSize) {
                 g.drawLine(x, 0, x, 640);
             }
-            for (int y = 0; y < 640; y += 32) {
+            for (int y = 0; y < 640; y += tileSize) {
                 g.drawLine(0, y, 640, y);
             }
             g.setColor(Color.RED);
-            g.setStroke(new BasicStroke(2));
-            g.drawRect(hoverTile.x * 32, hoverTile.y * 32, 32, 32);
+            g.setStroke(stroke);
+            g.drawRect(hoverTile.x * tileSize, hoverTile.y * tileSize, tileSize, tileSize);
         }
     }
     
@@ -190,12 +196,13 @@ public class Builder extends JFrame {
         
         public void paintComponent(Graphics bork) {
             Graphics2D g = (Graphics2D) bork;
-            for (Location l : tileset.getImageLocations()) {
-                g.drawImage(tileset.getImage(l), null, l.x * 32, l.y * 32);
+            int tileSize = tileset.getTileSize();
+            for (Location location : tileset.getImageLocations()) {
+                g.drawImage(tileset.getImage(location), null, location.x * tileSize, location.y * tileSize);
             }
             g.setColor(Color.RED);
-            g.setStroke(new BasicStroke(2));
-            g.drawRect(selectedTile.x * 32, selectedTile.y * 32, 32, 32);
+            g.setStroke(stroke);
+            g.drawRect(selectedTile.x * tileSize, selectedTile.y * tileSize, tileSize, tileSize);
         }
     }
     
