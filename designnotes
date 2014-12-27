@@ -98,7 +98,8 @@ Basic Game:
 
 Dennis's Notes:
 
-abstract class Item extends Entity (This is because an item is both an object on the map and something that can be in your inventory).
+abstract class Item extends Entity 
+(This is because an item is both an object on the map and something that can be in your inventory).
 - abstract class HealingItem extends Item. Has a method called heal(WorldState world, Survivor survivor).
   - class BandageItem extends HealingItem
   - then a bunch of other misc. healing items that extend this.
@@ -106,5 +107,8 @@ abstract class Item extends Entity (This is because an item is both an object on
   - class BarricadeItem extends SpawningItem
   - health totem?
   
-Forget the concept of Item having a use() method. WorldState will handle the using of the item. WorldState will check which item is being used (instanceof HealingItem, instanceof SpawningItem, etc.) and call its appropriate unique method that it has.
-If you're trying to use a Bandage, WorldState will first check if this Item is actually a HealingItem. If it is, it'll cast it to HealingItem and call heal.
+Forget the concept of Item having a use() method. WorldState will handle the using of the item. 
+WorldState will check which item is being used (instanceof HealingItem, instanceof SpawningItem, etc.) 
+and call its appropriate unique method that it has.
+If you're trying to use a Bandage, WorldState will first check if this Item is actually a HealingItem. 
+If it is, it'll cast it to HealingItem and call heal.
