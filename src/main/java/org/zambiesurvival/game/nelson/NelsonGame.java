@@ -1,7 +1,9 @@
-package com.amf.game;
+package com.amf.game.nelson;
 
 import com.amf.engine.Location;
-import com.amf.engine.GridMap;
+import com.amf.engine.World;
+import com.amf.engine.ImageSheet;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -16,17 +18,19 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-public class MikeGame extends JFrame {
+public class NelsonGame extends JFrame {
     
-    private GridMap<Point> map = new GridMap<>(32);
+    private World<Point> map = new World<>(32);
     
     private Point player = new Point(64, 64);
+    
+    private ImageSheet tileset = new ImageSheet("tileset.png", 32);
     
     private boolean moving = false, selected = false;
     
     private MouseListener mouse = new MouseAdapter() {
         
-        public void mouseClicked(MouseEvent me) {
+        public void mousePressed(MouseEvent me) {
             int mapX = me.getX() / 32;
             int mapY = me.getY() / 32;
             Location location = map.getLocation(player);
@@ -60,9 +64,14 @@ public class MikeGame extends JFrame {
     
     private Timer timer;
     
-    public MikeGame() {
+    public NelsonGame() {
         super("Zambie Survival");
         map.addEntity(player, 2, 2);
+        for (int x = 0; x < 22; x++) {
+            for (int y = 0; y < 15; y++) {
+                map.addTile(new Location((int) (Math.random() * 6), (int) (Math.random() * 7)), x, y);
+            }
+        }
         add(new GamePanel());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         pack();
@@ -108,8 +117,12 @@ public class MikeGame extends JFrame {
         
         public void paintComponent(Graphics bork) {
             Graphics2D g = (Graphics2D) bork;
-            g.setColor(Color.ORANGE);
-            g.fillRect(0, 0, 720, 480);
+            for (int x = 0; x < 22; x++) {
+                for (int y = 0; y < 15; y++) {
+                    Location location = map.getTile(x, y);
+                    g.drawImage(tileset.getTile(location), null, x * 32, y * 32);
+                }
+            }
             g.setColor(Color.GRAY);
             for (int x = 0; x < 720; x += 32) {
                 g.drawLine(x, 0, x, 480);
@@ -120,14 +133,15 @@ public class MikeGame extends JFrame {
             g.setColor(Color.RED);
             g.fillOval(player.x, player.y, 32, 32);
             if (selected) {
-                g.setColor(Color.BLUE);
+                g.setColor(Color.WHITE);
+                g.setStroke(new BasicStroke(2));
                 g.drawOval(player.x, player.y, 32, 32);
             }
         }
     }
     
     public static void main(String[] args) {
-        new MikeGame();
+        new NelsonGame();
     }
     
 }
