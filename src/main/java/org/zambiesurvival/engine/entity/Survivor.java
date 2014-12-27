@@ -10,6 +10,10 @@ public class Survivor extends Entity {
     private int animationTicks = (int) (Math.random() * 60);
     
     private ImageSheet sprites = ImageSheet.get("Survivor.png");
+    
+    public Survivor() {
+        super(3);
+    }
 
     public void render(Graphics2D g) {
         int x;
