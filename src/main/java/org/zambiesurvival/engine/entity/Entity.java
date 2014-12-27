@@ -4,12 +4,16 @@ import java.awt.Graphics2D;
 import main.java.org.zambiesurvival.engine.Direction;
 import main.java.org.zambiesurvival.engine.Location;
 import main.java.org.zambiesurvival.engine.WorldState;
+import main.java.org.zambiesurvival.engine.item.Item;
+import main.java.org.zambiesurvival.engine.item.Weapon;
 
 public abstract class Entity {
     
     protected Direction destination, direction = Direction.SOUTH;
     
     protected int health = 100;
+    
+    protected Inventory inventory = new Inventory();
     
     protected Location mapLocation, screenLocation;
     
@@ -88,5 +92,25 @@ public abstract class Entity {
     }
     
     public abstract void update(WorldState world);
+    
+    protected class Inventory {
+        
+        //Set to 10 for now since the designnotes has 10 unique items
+        //Bandage, MedKit, Food, Drank, Gun, BigGun, Ammo, Melee Weapon, Armor, Barricade
+        private final int[] inventory = new int[10];
+        
+        public boolean addItem(Item item) {
+            if (item instanceof Weapon) {
+                return true;
+            }
+            return false;
+        }
+        
+        private int getIndexOfItem(Item item) {
+            int index = 0;
+            return 0;
+        }
+        
+    }
     
 }
