@@ -48,6 +48,12 @@ Basic Game:
     - Marks the starting position -- radius in which Zambie encampments cannot spawn!!!!
     - If we decide to make some sort of way to collect scrap metal/currency and bring it back to base
         this will be the location of where everything is assembled and made.
+  -ItemEntity
+    -Entity which encapsulates one type of item(can have multiple quantities though)
+    -When an entity steps over it takes the items in ItemEntity and places it in the entity's inventory.
+    -If there is an ItemEntity on the ground and the Survivor/Zambie's inventory is full, it can step onto it
+      either by destroying the entity or by having the GridMap support two different types of Entities on the map:
+        -Encampment/Item Entities & Survivor/Zambie Entities.
     
 
 - Items:
