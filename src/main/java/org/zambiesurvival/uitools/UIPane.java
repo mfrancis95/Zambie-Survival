@@ -1,7 +1,7 @@
-package com.amf.uitools;
+package main.java.org.zambiesurvival.uitools;
 
-import com.amf.engine.Location;
-import java.awt.Color;
+import main.java.org.zambiesurvival.engine.Location;
+import main.java.org.zambiesurvival.uitools.GraphicButton;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

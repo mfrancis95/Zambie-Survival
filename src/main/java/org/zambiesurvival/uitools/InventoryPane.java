@@ -1,9 +1,9 @@
-package com.amf.uitools;
+package main.java.org.zambiesurvival.uitools;
 
-import com.amf.engine.Entity;
+import main.java.org.zambiesurvival.engine.entity.Entity;
 import com.amf.engine.Inventory;
-import com.amf.engine.Location;
-import com.amf.engine.Survivor;
+import main.java.org.zambiesurvival.engine.Location;
+import main.java.org.zambiesurvival.engine.entity.Survivor;
 
 public class InventoryPane extends UIPane{
     public static final int SIZE = 100;//temp can change in future.
