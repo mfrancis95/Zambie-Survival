@@ -1,24 +1,22 @@
-package com.amf.game.mike;
+package main.java.org.zambiesurvival.game.mike;
 
-import com.amf.engine.Game;
-import com.amf.engine.GameStateAdapter;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import main.java.org.zambiesurvival.engine.Game;
+import main.java.org.zambiesurvival.engine.GameStateAdapter;
 
-public class InventoryState extends GameStateAdapter {
+public class TitleState extends GameStateAdapter {
     
-    private boolean iKeyReleased;
+    private boolean keyReleased;
     
     public void init() {
-        iKeyReleased = false;
+        keyReleased = false;
     }
     
     public void keyReleased(KeyEvent ke) {
-        if (ke.getKeyCode() == KeyEvent.VK_I) {
-            iKeyReleased = true;
-        }
+        keyReleased = true;
     }
     
     public void render(Graphics2D g) {
@@ -26,14 +24,14 @@ public class InventoryState extends GameStateAdapter {
         g.fillRect(0, 0, 720, 480);
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 48));
-        g.drawString("Your Inventory", 70, 100);
+        g.drawString("Zambie Survival", 170, 200);
         g.setFont(new Font("Arial", Font.PLAIN, 24));
-        g.drawString("Press I to return to the game", 230, 450);
+        g.drawString("Press any key to start", 230, 300);
     }
     
     public void update(Game game) {
-        if (iKeyReleased) {
-            game.enterState("Main Game", false);
+        if (keyReleased) {
+            game.enterState("World", true);
         }
     }
     
