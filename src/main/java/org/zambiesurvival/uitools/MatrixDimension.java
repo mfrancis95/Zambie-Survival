@@ -1,4 +1,4 @@
-package com.amf.uitools;
+package main.java.org.zambiesurvival.uitools;
 
 /**
  *

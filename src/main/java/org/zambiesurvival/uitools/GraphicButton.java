@@ -4,9 +4,9 @@
  * and open the template in the editor.
  */
 
-package com.amf.uitools;
+package main.java.org.zambiesurvival.uitools;
 
-import com.amf.engine.Location;
+import main.java.org.zambiesurvival.engine.Location;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
