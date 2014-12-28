@@ -13,7 +13,7 @@ public abstract class Entity {
     
     protected int health = 100;
     
-    protected Location mapLocation, screenLocation;
+    protected Location mapLocation, worldLocation;
     
     protected boolean moving, passing;
     
@@ -46,8 +46,8 @@ public abstract class Entity {
         return mapLocation;
     }
 
-    public Location getScreenLocation() {
-        return screenLocation;
+    public Location getWorldLocation() {
+        return worldLocation;
     }
     
     public boolean isMoving() {
@@ -93,8 +93,8 @@ public abstract class Entity {
         mapLocation = location;
     }
 
-    public void setScreenLocation(Location location) {
-        screenLocation = location;
+    public void setWorldLocation(Location location) {
+        worldLocation = location;
     }
     
     public abstract void update(WorldState world);
