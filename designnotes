@@ -115,14 +115,15 @@ abstract class SpawningItem extends Item
 into the world.
 
 class BandageItem extends HealingItem
-- Has a constructor that calls super() with whatever we decided the maxQuantity and power to be.
+- Has a constructor that calls super() with whatever we decide the maxQuantity and power to be.
 
 class MedkitItem extends HealingItem
 - Has a constructor that calls super() with maxQuantity = 1 and whatever we decided power to be.
 
 class BarricadeItem extends SpawningItem
-- Has a constructor that calls super() with maxQuantity = 1 and a new Baruicade (Note: Barricade, not BarricadeItem) instance.
+- Has a constructor that calls super() with whatever we decide the maxQuantity to be and a new Barricade
+(Note: Barricade, not BarricadeItem) instance.
 
 Later on: class HealthTotemItem extends SpawningItem
-- Has a constructor that calls super() with maxQuantity = 1 and a new HealthTotem (Note: HealthTotem, not HealthTotemItem) 
-instance.
+- Has a constructor that calls super() with whatever we decide the maxQuantity to be and a new HealthTotem
+(Note: HealthTotem, not HealthTotemItem) instance.
