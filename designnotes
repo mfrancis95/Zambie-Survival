@@ -122,3 +122,7 @@ class MedkitItem extends HealingItem
 
 class BarricadeItem extends SpawningItem
 - Has a constructor that calls super() with maxQuantity = 1 and a new Baruicade (Note: Barricade, not BarricadeItem) instance.
+
+Later on: class HealthTotemItem extends SpawningItem
+- Has a constructor that calls super() with maxQuantity = 1 and a new HealthTotem (Note: HealthTotem, not HealthTotemItem) 
+instance.
