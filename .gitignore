@@ -12,8 +12,6 @@ build/classes/.netbeans_update_resources
 *.mf
 
 *.properties
-
-
-dist/javadoc/com/amf/game/nelson/NelsonGame.html
+/dist/
 /nbproject/private/
 /build/

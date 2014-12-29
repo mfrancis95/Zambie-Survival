@@ -12,7 +12,7 @@ public class Barricade extends Entity {
 
     public void render(Graphics2D g) {
         g.setColor(Color.ORANGE);
-        g.fillRect(screenLocation.x + 4, screenLocation.y + 16, 24, 16);
+        g.fillRect(worldLocation.x + 4, worldLocation.y + 16, 24, 16);
     }
 
     public void update(WorldState world) {}
