@@ -41,7 +41,7 @@ public class Survivor extends Entity {
             default:
                 y = 1;
         }
-        g.drawImage(sprites.getImage(new Location(x, y)), screenLocation.x, screenLocation.y, null);
+        g.drawImage(sprites.getImage(new Location(x, y)), worldLocation.x, worldLocation.y, null);
     }
 
     public void update(WorldState world) {
