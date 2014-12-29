@@ -1,0 +1,129 @@
+Design Notes
+
+filled in arbitrary numbers that can be changed. Everyhting may be changed. These are just ideas that need full group approval
+Please fill-in anything that is missing/change what is incorrect.
+Basic Game:
+
+- Damage calculation: 
+  - ([this.Attack + this.ItemPower] / [other.Defence + other.ItemDefense]) * Multiplier * Random
+- Multiplier: 1 - ([Current Hunger/Total Hunger] + [Current Thirst/Total Thirst]) //Multiplier set to 1 in basic game
+  - Hunger & Thirst can be scaled from 1-10.
+  - If too hungry or too thirsty the survivor.
+  - Zambie does not have multiplier, so same calculation without multiplier.
+- Random: 
+  -- first roll: if randomValue <= 0.5 then miss; else roll again for damage
+  -- second roll: return (randomValue*0.3)+0.7;
+^^ Can be changed. Any randomness wanted? 
+  - yes so its not always hitting the same damage.
+  - Could be set so that you either miss or hit 70%+ of your damage.
+
+- Entities:
+  - Normal Zambie (Zambie)
+    - Max health: 75
+    - Defense: 1 -- Defence cannot be 0.
+    - Attack: 10
+  - Item Zambie (ItemZambie)
+    - Max health: 75
+    - Defense: 1 -- Defence cannot be 0.
+    - Attack: 10
+    - Drops a random item upon defeat
+  - Survivor (Survivor)
+    - Max health: 100
+    - Defense: 1 -- Defence cannot be 0.
+    - Attack: 5 (can attack without item?
+    - Has an inventory and may use items
+    - Will we need a worn inventory/equip item mode or will survivors automatically use the items in the inventory?
+  - 1 type of Barricade (Barricade)
+    - Max health: 50
+    - Defense: 5
+    - Attack: 0
+  - Zambie Encampments
+    - Max health - 1.
+      - If zombie located on top, must kill zambie first. Then you will be able to capture the encampment in one turn. 
+    - Randomly spawned every 3-20 turns
+    - Spawned at a random coordinate >5 tiles away from player encampment
+    - Random spawns a Zambie every 3-10 turns
+  - Player Encampments
+    - Tile(s) where the player spawns on
+    - Marks the starting position -- radius in which Zambie encampments cannot spawn!!!!
+    - If we decide to make some sort of way to collect scrap metal/currency and bring it back to base
+        this will be the location of where everything is assembled and made.
+  -ItemEntity
+    -Entity which encapsulates one type of item(can have multiple quantities though)
+    -When an entity steps over it takes the items in ItemEntity and places it in the entity's inventory.
+    -If there is an ItemEntity on the ground and the Survivor/Zambie's inventory is full, it can step onto it
+      either by destroying the entity or by having the GridMap support two different types of Entities on the map:
+        -Encampment/Item Entities & Survivor/Zambie Entities.
+    
+
+- Items:
+  - Bandage
+    - Use: to recover user's damage
+    - How: with a call to Bandage.use()
+    - Notes: recovers 5 health immediately, ensuring maximum health cannot go above maximum health
+  - Medkit
+    - Use: to recover user and surround teammate's damage
+    - How: calls Medkit.use()
+    - Notes: similar to bangage except it heals everyone within a 1 tile radius, damages zombies within 1 tile radius.
+  -Food(generic, can create more later on)
+    - Use: to recover hunger
+    - How: calls Food.use()
+    - Notes: heals hunger by 1.
+  -Water/Drink(generic, can create more)
+    - Use: to recover thirst
+    - How: calls Water.use()
+    Notes: heals thirst by 1.
+  - Gun
+    - Use: to damage a zambie
+    - How: with a call to Gun.use()
+    - Notes: calculates damage with the above formula with ItemPower of 5
+  - BigGun
+   - Use: to damage a zambie
+   - How: with a call to BigGun.use()
+   - Notes: calculates damage with above formula with ItemPower of 10. Causes recoil (i.e. survivor moves back one space). If
+      the Survivor is on the edge of the Map or there is an entity behind it, does not move. If there is an item on the spot it 
+      recoils to, the Survivior picks up the item
+  - Ammunition? - Will we need ammo to shoot the guns; if you don't have ammo you can use gun as club.
+    - Use: To provide ammo for the Gun and BigGun
+    - How: calls Ammo.use() -- decrements the amount of ammo; if zero deletes item.
+  - Melee Weapon/Club/Sword? - Defaults all weapons to some sort of melee weapon if it runs out of ammo.
+  - Armor
+    - Use: to protect a survivor
+    - How: upon havin in inventory (can only have one in inventory (i.e. cannot pick up armor if Survivor already has it))
+    - Notes: can drop this item(?). ItemDefense of 2
+  - Barricade
+    - Use: to block movement
+    - How: upon call to Barricade.use()
+    - Notes: Survivor places this down on map
+
+Dennis's Notes:
+
+abstract class Item extends Entity 
+- Has an int quantity field.
+- Has an int maxQuantity field.
+- Has a constructor which takes int maxQuantity as a parameter.
+
+abstract class HealingItem extends Item
+- Has an int power field (amount of health to restore).
+- Has a constructor that takes int maxQuantity and int power as parameters.
+- Has a void heal(WorldState world, Survivor survivor) method that sets the Survivor's health to max(100, getHealth() + power).
+
+abstract class SpawningItem extends Item
+- Has an Entity entity field (The entity to be spawned into the game world).
+- Has a constructor that takes int maxQuantity and Entity entity as parameters.
+- Has a void spawn(WorldState world, Location location) method that calls WorldState's addEntity() method to place the entity 
+into the world.
+
+class BandageItem extends HealingItem
+- Has a constructor that calls super() with whatever we decide the maxQuantity and power to be.
+
+class MedkitItem extends HealingItem
+- Has a constructor that calls super() with maxQuantity = 1 and whatever we decided power to be.
+
+class BarricadeItem extends SpawningItem
+- Has a constructor that calls super() with whatever we decide the maxQuantity to be and a new Barricade
+(Note: Barricade, not BarricadeItem) instance.
+
+Later on: class HealthTotemItem extends SpawningItem
+- Has a constructor that calls super() with whatever we decide the maxQuantity to be and a new HealthTotem
+(Note: HealthTotem, not HealthTotemItem) instance.
