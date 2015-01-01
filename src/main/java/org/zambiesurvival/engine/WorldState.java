@@ -31,7 +31,7 @@ public class WorldState extends GameStateAdapter {
 
     public void addEntity(Location location, Entity entity) {
         entity.setMapLocation(location);
-        entity.setScreenLocation(new Location(location.x * tileSize, location.y * tileSize - 8));
+        entity.setWorldLocation(new Location(location.x * tileSize, location.y * tileSize - 8));
         entities.add(entity);
     }
 
@@ -94,7 +94,7 @@ public class WorldState extends GameStateAdapter {
 
     public void render(Graphics2D g) {
         for (Location location : tiles.keySet()) {
-            g.drawImage(tileset.getImage(tiles.get(location)), null, location.x * tileSize, location.y * tileSize);
+            g.drawImage(tileset.getImage(tiles.get(location)), location.x * tileSize, location.y * tileSize, null);
         }
         g.setColor(Color.GRAY);
         for (int x = 0; x < 640; x += tileSize) {
@@ -103,13 +103,13 @@ public class WorldState extends GameStateAdapter {
         for (int y = 0; y < 480; y += tileSize) {
             g.drawLine(0, y, 640, y);
         }
-        Location location = entities.get(currentEntity).getScreenLocation();
+        Location location = entities.get(currentEntity).getWorldLocation();
         g.setColor(Color.WHITE);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
         g.fillOval(location.x - 16, location.y - 8, tileSize + 32, tileSize + 32);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
         for (Entity entity : entities) {
-            location = entity.getScreenLocation();
+            location = entity.getWorldLocation();
             g.setColor(Color.BLACK);
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
             g.fillOval(location.x + 4, location.y + 20, tileSize - 8, tileSize / 2);
@@ -123,20 +123,20 @@ public class WorldState extends GameStateAdapter {
         if (currentEntityActions < entity.getActions()) {
             if (entity.isMoving()) {
                 Location mapLocation = entity.getMapLocation();
-                Location screenLocation = entity.getScreenLocation();
+                Location screenLocation = entity.getWorldLocation();
                 int destinationScreenX = mapLocation.x * 32;
                 int destinationScreenY = mapLocation.y * 32 - 8;
                 if (screenLocation.x < destinationScreenX) {
-                    entity.setScreenLocation(screenLocation.add(1, 0));
+                    entity.setWorldLocation(screenLocation.add(1, 0));
                 } 
                 else if (screenLocation.x > destinationScreenX) {
-                    entity.setScreenLocation(screenLocation.add(-1, 0));
+                    entity.setWorldLocation(screenLocation.add(-1, 0));
                 }
                 if (screenLocation.y < destinationScreenY) {
-                    entity.setScreenLocation(screenLocation.add(0, 1));
+                    entity.setWorldLocation(screenLocation.add(0, 1));
                 } 
                 else if (screenLocation.y > destinationScreenY) {
-                    entity.setScreenLocation(screenLocation.add(0, -1));
+                    entity.setWorldLocation(screenLocation.add(0, -1));
                 }
                 if (screenLocation.x == destinationScreenX && screenLocation.y == destinationScreenY) {
                     entity.endAction();

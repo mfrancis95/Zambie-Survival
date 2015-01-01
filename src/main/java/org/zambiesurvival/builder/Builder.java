@@ -171,7 +171,7 @@ public class Builder extends JFrame {
             Graphics2D g = (Graphics2D) bork;
             int tileSize = tileset.getTileSize();
             for (Location location : map.keySet()) {
-                g.drawImage(tileset.getImage(map.get(location)), null, location.x * tileSize, location.y * tileSize);
+                g.drawImage(tileset.getImage(map.get(location)), location.x * tileSize, location.y * tileSize, null);
             }
             g.setColor(Color.GRAY);
             for (int x = 0; x < 640; x += tileSize) {

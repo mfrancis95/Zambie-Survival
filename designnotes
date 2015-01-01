@@ -99,16 +99,31 @@ Basic Game:
 Dennis's Notes:
 
 abstract class Item extends Entity 
-(This is because an item is both an object on the map and something that can be in your inventory).
-- abstract class HealingItem extends Item. Has a method called heal(WorldState world, Survivor survivor).
-  - class BandageItem extends HealingItem
-  - then a bunch of other misc. healing items that extend this.
-- abstract class SpawningItem extends Item. Has a method called spawn(WorldState world, Direction direction).
-  - class BarricadeItem extends SpawningItem
-  - health totem?
-  
-Forget the concept of Item having a use() method. WorldState will handle the using of the item. 
-WorldState will check which item is being used (instanceof HealingItem, instanceof SpawningItem, etc.) 
-and call its appropriate unique method that it has.
-If you're trying to use a Bandage, WorldState will first check if this Item is actually a HealingItem. 
-If it is, it'll cast it to HealingItem and call heal.
+- Has an int quantity field.
+- Has an int maxQuantity field.
+- Has a constructor which takes int maxQuantity as a parameter.
+
+abstract class HealingItem extends Item
+- Has an int power field (amount of health to restore).
+- Has a constructor that takes int maxQuantity and int power as parameters.
+- Has a void heal(WorldState world, Survivor survivor) method that sets the Survivor's health to max(100, getHealth() + power).
+
+abstract class SpawningItem extends Item
+- Has an Entity entity field (The entity to be spawned into the game world).
+- Has a constructor that takes int maxQuantity and Entity entity as parameters.
+- Has a void spawn(WorldState world, Location location) method that calls WorldState's addEntity() method to place the entity 
+into the world.
+
+class BandageItem extends HealingItem
+- Has a constructor that calls super() with whatever we decide the maxQuantity and power to be.
+
+class MedkitItem extends HealingItem
+- Has a constructor that calls super() with maxQuantity = 1 and whatever we decided power to be.
+
+class BarricadeItem extends SpawningItem
+- Has a constructor that calls super() with whatever we decide the maxQuantity to be and a new Barricade
+(Note: Barricade, not BarricadeItem) instance.
+
+Later on: class HealthTotemItem extends SpawningItem
+- Has a constructor that calls super() with whatever we decide the maxQuantity to be and a new HealthTotem
+(Note: HealthTotem, not HealthTotemItem) instance.
