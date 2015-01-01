@@ -1,6 +1,8 @@
 package main.java.org.zambiesurvival.engine.entity;
 
 import java.awt.Graphics2D;
+import java.util.HashMap;
+import java.util.Map;
 import main.java.org.zambiesurvival.engine.Direction;
 import main.java.org.zambiesurvival.engine.Location;
 import main.java.org.zambiesurvival.engine.WorldState;
@@ -106,20 +108,18 @@ public abstract class Entity {
     
     protected class Inventory {
         
-        //Set to 11 for now since the designnotes has 11 unique items
-        //Bandage, MedKit, Food, Drank, Gun, BigGun, Ammo, Melee Weapon, Armor, Barricade, Healthtotem
-        private final int[] inventory = new int[11];
+        private final Map<Item, Integer> inventory;
+
+        public Inventory() {
+            inventory = new HashMap<>();
+        }
         
         public boolean addItem(Item item) {
             return false;
         }
         
         public boolean contains(Item item) {
-            return inventory[getIndexOfItem(item)] != 0;
-        }
-        
-        private int getIndexOfItem(Item item) {
-            return 0;
+            return inventory.containsKey(item);
         }
         
     }

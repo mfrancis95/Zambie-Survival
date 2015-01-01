@@ -5,6 +5,8 @@ import main.java.org.zambiesurvival.engine.entity.Entity;
 public abstract class Item extends Entity {
     
     protected int maxQuantity, power, quantity = 0;
+    
+    protected boolean stackable;
 
     public Item(int maxQuantity) {
         super(0);
@@ -13,6 +15,10 @@ public abstract class Item extends Entity {
     
     public int getPower() {
         return power;
+    }
+    
+    public boolean isStackable() {
+        return stackable;
     }
     
     public void setPower(int power) {
