@@ -4,22 +4,15 @@ import main.java.org.zambiesurvival.engine.entity.Entity;
 
 public abstract class Item extends Entity {
     
-    protected int defense, power;
+    protected int maxQuantity, power, quantity = 0;
 
-    public Item() {
+    public Item(int maxQuantity) {
         super(0);
-    }
-    
-    public int getDefense() {
-        return defense;
+        this.maxQuantity = maxQuantity;
     }
     
     public int getPower() {
         return power;
-    }
-    
-    public void setDefense(int defense) {
-        this.defense = defense;
     }
     
     public void setPower(int power) {
