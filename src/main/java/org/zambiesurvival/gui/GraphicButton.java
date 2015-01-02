@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package main.java.org.zambiesurvival.uitools;
+package main.java.org.zambiesurvival.gui;
 
 import main.java.org.zambiesurvival.engine.Location;
 import java.awt.Color;

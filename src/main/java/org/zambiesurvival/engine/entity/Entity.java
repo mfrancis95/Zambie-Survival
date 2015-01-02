@@ -1,12 +1,9 @@
 package main.java.org.zambiesurvival.engine.entity;
 
-import java.awt.Graphics2D;
-import java.util.HashMap;
-import java.util.Map;
 import main.java.org.zambiesurvival.engine.Direction;
+import main.java.org.zambiesurvival.engine.Inventory;
 import main.java.org.zambiesurvival.engine.Location;
-import main.java.org.zambiesurvival.engine.WorldState;
-import main.java.org.zambiesurvival.engine.item.Item;
+import main.java.org.zambiesurvival.engine.state.WorldState;
 
 public abstract class Entity {
     
@@ -16,19 +13,27 @@ public abstract class Entity {
     
     protected int health = 100;
     
-    protected Inventory inventory = new Inventory();
+    protected final Inventory inventory;
     
     protected Location mapLocation, worldLocation;
     
     protected boolean moving, passing;
     
-    public final int MAX_HEALTH = 100;
+    public Entity() {
+        this(0, 0);
+    }
     
     public Entity(int actions) {
+        this(actions, 0);
+    }
+    
+    public Entity(int actions, int inventorySlots) {
         this.actions = actions;
+        inventory = new Inventory(inventorySlots);
     }
     
     public void endAction() {
+        destination = null;
         moving = false;
         passing = false;
     }
@@ -49,6 +54,10 @@ public abstract class Entity {
         return health;
     }
     
+    public Inventory getInventory() {
+        return inventory;
+    }
+    
     public Location getMapLocation() {
         return mapLocation;
     }
@@ -65,13 +74,17 @@ public abstract class Entity {
         return passing;
     }
     
-    public boolean move(WorldState world, Direction direction) {
-        Location location = mapLocation.next(direction);
+    public boolean move(WorldState world) {
+        if (destination == null) {
+            return false;
+        }
+        Location location = mapLocation.next(destination);
         if (location.x < 0 || location.x >= 20 || location.y < 0 || location.y >= 15 || world.getEntity(location) != null) {
             return false;
         }
         else {
-            this.direction = direction;
+            direction = destination;
+            destination = null;
             mapLocation = mapLocation.next(direction);
             moving = true;
             return true;
@@ -105,23 +118,5 @@ public abstract class Entity {
     }
     
     public abstract void update(WorldState world);
-    
-    protected class Inventory {
-        
-        private final Map<Item, Integer> inventory;
-
-        public Inventory() {
-            inventory = new HashMap<>();
-        }
-        
-        public boolean addItem(Item item) {
-            return false;
-        }
-        
-        public boolean contains(Item item) {
-            return inventory.containsKey(item);
-        }
-        
-    }
     
 }

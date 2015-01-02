@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import main.java.org.zambiesurvival.engine.Direction;
 import main.java.org.zambiesurvival.engine.ImageSheet;
 import main.java.org.zambiesurvival.engine.Location;
-import main.java.org.zambiesurvival.engine.WorldState;
+import main.java.org.zambiesurvival.engine.state.WorldState;
 
 public class Zambie extends Entity {
     
@@ -15,7 +15,7 @@ public class Zambie extends Entity {
     private final ImageSheet sprites = ImageSheet.get("Zambies.png");
     
     public Zambie() {
-        super(1);
+        super(1, 4);
     }
     
     public void render(Graphics2D g) {
@@ -50,7 +50,10 @@ public class Zambie extends Entity {
     public void update(WorldState world) {
         try {
             if (ticks++ == 60) {
-                while (!move(world, Direction.values()[(int) (Math.random() * 5)])) {}
+                destination = Direction.values()[(int) (Math.random() * 5)];
+                while (!move(world)) {
+                    destination = Direction.values()[(int) (Math.random() * 5)];
+                }
                 ticks = 0;
             }
         }

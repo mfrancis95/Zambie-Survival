@@ -1,4 +1,4 @@
-package main.java.org.zambiesurvival.uitools;
+package main.java.org.zambiesurvival.gui;
 
 import main.java.org.zambiesurvival.engine.entity.Entity;
 import com.amf.engine.Inventory;

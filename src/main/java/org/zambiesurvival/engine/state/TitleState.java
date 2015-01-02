@@ -1,11 +1,10 @@
-package main.java.org.zambiesurvival.game.mike;
+package main.java.org.zambiesurvival.engine.state;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import main.java.org.zambiesurvival.engine.Game;
-import main.java.org.zambiesurvival.engine.GameStateAdapter;
 
 public class TitleState extends GameStateAdapter {
     

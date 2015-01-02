@@ -1,7 +1,6 @@
-package main.java.org.zambiesurvival.uitools;
+package main.java.org.zambiesurvival.gui;
 
 import main.java.org.zambiesurvival.engine.Location;
-import main.java.org.zambiesurvival.uitools.GraphicButton;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

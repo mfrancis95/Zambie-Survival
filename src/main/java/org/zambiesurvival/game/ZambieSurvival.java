@@ -1,8 +1,9 @@
-package main.java.org.zambiesurvival.game.mike;
+package main.java.org.zambiesurvival.game;
 
+import main.java.org.zambiesurvival.engine.state.TitleState;
 import main.java.org.zambiesurvival.engine.Game;
 import main.java.org.zambiesurvival.engine.GameContainer;
-import main.java.org.zambiesurvival.engine.WorldState;
+import main.java.org.zambiesurvival.engine.state.WorldState;
 
 public class ZambieSurvival {
     
@@ -11,7 +12,7 @@ public class ZambieSurvival {
         game.addState("Title", new TitleState());
         game.addState("World", new WorldState(32));
         game.enterState("Title", true);
-        new GameContainer(game, "Zambie Survival", 640, 480).start();
+        new GameContainer(game, "Zambie Survival", 720, 480).start();
     }
     
 }

@@ -1,8 +1,9 @@
-package main.java.org.zambiesurvival.engine;
+package main.java.org.zambiesurvival.engine.state;
 
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import main.java.org.zambiesurvival.engine.Game;
 
 public abstract class GameStateAdapter implements GameState {
     
