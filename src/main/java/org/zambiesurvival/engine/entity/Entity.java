@@ -1,5 +1,6 @@
 package main.java.org.zambiesurvival.engine.entity;
 
+import java.awt.Graphics2D;
 import main.java.org.zambiesurvival.engine.Direction;
 import main.java.org.zambiesurvival.engine.Inventory;
 import main.java.org.zambiesurvival.engine.Location;

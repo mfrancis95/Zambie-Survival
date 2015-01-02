@@ -5,35 +5,19 @@ import main.java.org.zambiesurvival.engine.entity.Entity;
 
 public abstract class Item extends Entity {
     
-<<<<<<< HEAD
-    protected int maxQuantity, power, quantity = 0;
-    
-    protected boolean stackable;
-
-    public Item(int maxQuantity) {
-        super(0);
-=======
-    public final int maxQuantity;
+    public final int MAX_QUANTITY;
     
     protected int quantity;
 
     public Item(int maxQuantity) {
         super();
->>>>>>> master
-        this.maxQuantity = maxQuantity;
+        MAX_QUANTITY = maxQuantity;
     }
     
     public int getQuantity() {
         return quantity;
     }
-    
-<<<<<<< HEAD
-    public boolean isStackable() {
-        return stackable;
-    }
-=======
     public abstract void render(Graphics2D g, int x, int y);
->>>>>>> master
     
     public void setQuantity(int quantity) {
         this.quantity = quantity;
