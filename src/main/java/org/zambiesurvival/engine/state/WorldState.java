@@ -152,6 +152,9 @@ public class WorldState extends GameStateAdapter {
                 g.drawRect(x, y, 32, 32);
                 if (item != null) {
                     item.render(g, x, y);
+                    g.setColor(Color.RED);
+                    g.setFont(new Font("Arial", Font.PLAIN, 12));
+                    g.drawString("" + item.getQuantity(), x + 25, y + 30);
                 }
             }
         }
