@@ -7,8 +7,8 @@ public abstract class HealingItem extends Item {
     
     protected final int power;
     
-    public HealingItem(int maxQuantity, int power) {
-        super(maxQuantity);
+    public HealingItem(int maxQuantity, int quantity, int power) {
+        super(maxQuantity, quantity);
         this.power = power;
     }
     

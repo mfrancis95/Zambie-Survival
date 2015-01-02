@@ -9,7 +9,7 @@ public abstract class SpawningItem extends Item {
     protected final Entity entity;
     
     public SpawningItem(int maxQuantity, Entity entity) {
-        super(maxQuantity);
+        super(maxQuantity, 1);
         this.entity = entity;
     }
     

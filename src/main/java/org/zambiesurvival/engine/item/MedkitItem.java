@@ -7,7 +7,7 @@ import main.java.org.zambiesurvival.engine.state.WorldState;
 public class MedkitItem extends HealingItem {
 
     public MedkitItem() {
-        super(1, 25);
+        super(1, 1, 25);
     }
 
     public void render(Graphics2D g) {

@@ -5,8 +5,8 @@ import main.java.org.zambiesurvival.engine.state.WorldState;
 
 public class BandageItem extends HealingItem {
 
-    public BandageItem() {
-        super(5, 5);
+    public BandageItem(int quantity) {
+        super(5, quantity, 5);
     }
 
     public void render(Graphics2D g) {
