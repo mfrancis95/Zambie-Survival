@@ -13,7 +13,7 @@ public abstract class HealingItem extends Item {
     }
     
     public void heal(WorldState world, Survivor survivor) {
-        survivor.setHealth(Math.max(100, survivor.getHealth() + power));
+        survivor.setHealth(Math.min(100, survivor.getHealth() + power));
     }
 
 }
