@@ -22,9 +22,11 @@ public class Inventory {
                 int max = item.MAX_QUANTITY, newQuantity = items[i].getQuantity() + item.getQuantity();
                 if (newQuantity == max) {
                     items[i].setQuantity(max);
+                    return true;
                 }
                 if (newQuantity < max) {
                     items[i].setQuantity(newQuantity);
+                    return true;
                 }
                 else {
                     item.setQuantity(max - items[i].getQuantity());
