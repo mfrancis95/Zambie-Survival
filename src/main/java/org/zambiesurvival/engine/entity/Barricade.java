@@ -2,12 +2,12 @@ package main.java.org.zambiesurvival.engine.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import main.java.org.zambiesurvival.engine.WorldState;
+import main.java.org.zambiesurvival.engine.state.WorldState;
 
 public class Barricade extends Entity {
     
     public Barricade() {
-        super(0);
+        super();
     }
 
     public void render(Graphics2D g) {

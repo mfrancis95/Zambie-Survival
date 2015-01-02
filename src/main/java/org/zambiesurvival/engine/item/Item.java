@@ -1,29 +1,27 @@
 package main.java.org.zambiesurvival.engine.item;
 
+import java.awt.Graphics2D;
 import main.java.org.zambiesurvival.engine.entity.Entity;
 
 public abstract class Item extends Entity {
     
-    protected int defense, power;
+    public final int maxQuantity;
+    
+    protected int quantity;
 
-    public Item() {
-        super(0);
+    public Item(int maxQuantity) {
+        super();
+        this.maxQuantity = maxQuantity;
     }
     
-    public int getDefense() {
-        return defense;
+    public int getQuantity() {
+        return quantity;
     }
     
-    public int getPower() {
-        return power;
-    }
+    public abstract void render(Graphics2D g, int x, int y);
     
-    public void setDefense(int defense) {
-        this.defense = defense;
-    }
-    
-    public void setPower(int power) {
-        this.power = power;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
     
 }

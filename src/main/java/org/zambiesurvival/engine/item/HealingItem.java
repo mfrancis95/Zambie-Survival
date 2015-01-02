@@ -1,16 +1,19 @@
 package main.java.org.zambiesurvival.engine.item;
 
-import main.java.org.zambiesurvival.engine.WorldState;
-import main.java.org.zambiesurvival.engine.entity.Entity;
+import main.java.org.zambiesurvival.engine.state.WorldState;
 import main.java.org.zambiesurvival.engine.entity.Survivor;
 
 public abstract class HealingItem extends Item {
     
-    public HealingItem(int power) {
+    protected final int power;
+    
+    public HealingItem(int maxQuantity, int power) {
+        super(maxQuantity);
         this.power = power;
-        defense = 0;
     }
     
-    public abstract void heal(Survivor user, Entity target, WorldState world);
+    public void heal(WorldState world, Survivor survivor) {
+        survivor.setHealth(Math.max(100, survivor.getHealth() + power));
+    }
 
 }

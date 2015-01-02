@@ -1,24 +1,26 @@
 package main.java.org.zambiesurvival.engine.item;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
-import main.java.org.zambiesurvival.engine.WorldState;
-import main.java.org.zambiesurvival.engine.entity.Entity;
-import main.java.org.zambiesurvival.engine.entity.Survivor;
+import main.java.org.zambiesurvival.engine.state.WorldState;
 
-public class Medkit extends HealingItem {
-    
-    private int radius = 1;
+public class MedkitItem extends HealingItem {
 
-    public Medkit(int power) {
-        super(power);
-    }
-
-    public void heal(Survivor user, Entity target, WorldState world) {
-        //heal entire radius
+    public MedkitItem() {
+        super(1, 25);
     }
 
     public void render(Graphics2D g) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public void render(Graphics2D g, int x, int y) {
+        g.setColor(Color.WHITE);
+        g.fillRect(x + 8, y + 8, 16, 16);
+        g.setColor(Color.BLACK);
+        g.drawRect(x + 8, y + 8, 16, 16);
+        g.setColor(Color.RED);
+        g.fillRect(x + 12, y + 12, 8, 8);
     }
 
     public void update(WorldState world) {

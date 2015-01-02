@@ -1,22 +1,20 @@
 package main.java.org.zambiesurvival.engine.item;
 
 import java.awt.Graphics2D;
-import main.java.org.zambiesurvival.engine.WorldState;
-import main.java.org.zambiesurvival.engine.entity.Entity;
-import main.java.org.zambiesurvival.engine.entity.Survivor;
+import main.java.org.zambiesurvival.engine.state.WorldState;
 
-public class Bandage extends HealingItem {
+public class BandageItem extends HealingItem {
 
-    public Bandage(int power) {
-        super(power);
+    public BandageItem() {
+        super(5, 5);
     }
 
-    public void heal(Survivor user, Entity target, WorldState world) {
-        user.setHealth(Math.min(MAX_HEALTH, user.getHealth() + power));
-    }
-    
     public void render(Graphics2D g) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    public void render(Graphics2D g, int x, int y) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public void update(WorldState world) {
