@@ -3,16 +3,16 @@ package main.java.org.zambiesurvival.engine.entity;
 import java.awt.Graphics2D;
 import main.java.org.zambiesurvival.engine.ImageSheet;
 import main.java.org.zambiesurvival.engine.Location;
-import main.java.org.zambiesurvival.engine.WorldState;
+import main.java.org.zambiesurvival.engine.state.WorldState;
 
 public class Survivor extends Entity {
     
     private int animationTicks = (int) (Math.random() * 60);
     
-    private ImageSheet sprites = ImageSheet.get("Survivor.png");
+    private final ImageSheet sprites = ImageSheet.get("Survivor.png");
     
     public Survivor() {
-        super(3);
+        super(3, 4);
     }
 
     public void render(Graphics2D g) {
@@ -45,10 +45,7 @@ public class Survivor extends Entity {
     }
 
     public void update(WorldState world) {
-        if (destination != null) {
-            move(world, destination);
-            destination = null;
-        }
+        move(world);
     }
 
 }

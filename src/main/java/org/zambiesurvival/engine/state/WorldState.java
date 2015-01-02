@@ -1,21 +1,31 @@
-package main.java.org.zambiesurvival.engine;
+package main.java.org.zambiesurvival.engine.state;
 
 import main.java.org.zambiesurvival.engine.entity.Survivor;
 import main.java.org.zambiesurvival.engine.entity.Entity;
 import main.java.org.zambiesurvival.engine.entity.Zambie;
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import main.java.org.zambiesurvival.engine.Direction;
+import main.java.org.zambiesurvival.engine.Game;
+import main.java.org.zambiesurvival.engine.ImageSheet;
+import main.java.org.zambiesurvival.engine.Inventory;
+import main.java.org.zambiesurvival.engine.Location;
 import main.java.org.zambiesurvival.engine.entity.Barricade;
+import main.java.org.zambiesurvival.engine.item.Item;
+import main.java.org.zambiesurvival.engine.item.MedkitItem;
 
 public class WorldState extends GameStateAdapter {
 
     private int currentEntity, currentEntityActions;
+    
+    private Inventory currentInventory;
 
     private List<Entity> entities;
 
@@ -29,15 +39,15 @@ public class WorldState extends GameStateAdapter {
         this.tileSize = tileSize;
     }
 
-    public void addEntity(Location location, Entity entity) {
-        entity.setMapLocation(location);
-        entity.setWorldLocation(new Location(location.x * tileSize, location.y * tileSize - 8));
+    public void addEntity(Location mapLocation, Entity entity) {
+        entity.setMapLocation(mapLocation);
+        entity.setWorldLocation(new Location(mapLocation.x * tileSize, mapLocation.y * tileSize - 8));
         entities.add(entity);
     }
 
-    public Entity getEntity(Location location) {
+    public Entity getEntity(Location mapLocation) {
         for (Entity entity : entities) {
-            if (entity.getMapLocation().equals(location)) {
+            if (entity.getMapLocation().equals(mapLocation)) {
                 return entity;
             }
         }
@@ -46,11 +56,13 @@ public class WorldState extends GameStateAdapter {
 
     public void init() {
         currentEntity = currentEntityActions = 0;
+        currentInventory = null;
         tileset = ImageSheet.load("Tileset.png", 32);
         ImageSheet.load("Survivor.png", 32);
         ImageSheet.load("Zambies.png", 32);
         entities = new ArrayList<>();
         addEntity(new Location(5, 7), new Survivor());
+        entities.get(0).getInventory().addItem(new MedkitItem());
         addEntity(new Location(14, 7), new Survivor());
         addEntity(new Location(6, 7), new Barricade());
         addEntity(new Location(13, 7), new Barricade());
@@ -71,7 +83,7 @@ public class WorldState extends GameStateAdapter {
 
     public void keyPressed(KeyEvent ke) {
         Entity entity = entities.get(currentEntity);
-        if (entity instanceof Survivor) {
+        if (entity instanceof Survivor && !entity.isMoving()) {
             switch (ke.getKeyCode()) {
                 case KeyEvent.VK_UP:
                     entity.setDestination(Direction.NORTH);
@@ -93,16 +105,21 @@ public class WorldState extends GameStateAdapter {
     }
 
     public void render(Graphics2D g) {
-        for (Location location : tiles.keySet()) {
-            g.drawImage(tileset.getImage(tiles.get(location)), location.x * tileSize, location.y * tileSize, null);
-        }
+        renderTiles(g);
+        renderEntities(g);
+        renderBorders(g);
+        renderInventory(g);
+    }
+    
+    public void renderBorders(Graphics2D g) {
         g.setColor(Color.GRAY);
-        for (int x = 0; x < 640; x += tileSize) {
-            g.drawLine(x, 0, x, 480);
-        }
-        for (int y = 0; y < 480; y += tileSize) {
-            g.drawLine(0, y, 640, y);
-        }
+        g.fillRect(640, 0, 8, 480);
+        g.fillRect(712, 0, 8, 480);
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(648, 0, 64, 480);
+    }
+    
+    public void renderEntities(Graphics2D g) {
         Location location = entities.get(currentEntity).getWorldLocation();
         g.setColor(Color.WHITE);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
@@ -114,12 +131,46 @@ public class WorldState extends GameStateAdapter {
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
             g.fillOval(location.x + 4, location.y + 20, tileSize - 8, tileSize / 2);
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+        }
+        for (Entity entity : entities) {
             entity.render(g);
+        }
+    }
+    
+    public void renderInventory(Graphics2D g) {
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 12));
+        g.drawString("Inventory", 654, 20);
+        if (currentInventory != null) {
+            for (int i = 0; i < currentInventory.getSlots(); i++) {
+                Item item = currentInventory.getItem(i);
+                int x = 648 + (i % 2 == 0 ? 0 : 32);
+                int y = 32 * (i / 2 + 1);
+                g.setColor(Color.WHITE);
+                g.fillRect(x, y, 32, 32);
+                g.setColor(Color.GRAY);
+                g.drawRect(x, y, 32, 32);
+                if (item != null) {
+                    item.render(g, x, y);
+                    g.setColor(Color.RED);
+                    g.setFont(new Font("Arial", Font.PLAIN, 12));
+                    g.drawString("" + item.getQuantity(), x + 25, y + 30);
+                }
+            }
+        }
+    }
+    
+    public void renderTiles(Graphics2D g) {
+        for (Location location : tiles.keySet()) {
+            g.drawImage(tileset.getImage(tiles.get(location)), location.x * tileSize, location.y * tileSize, null);
         }
     }
 
     public void update(Game game) {
         Entity entity = entities.get(currentEntity);
+        if (entity instanceof Survivor) {
+            currentInventory = entity.getInventory();
+        }
         if (currentEntityActions < entity.getActions()) {
             if (entity.isMoving()) {
                 Location mapLocation = entity.getMapLocation();

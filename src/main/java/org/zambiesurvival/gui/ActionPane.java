@@ -4,12 +4,8 @@
  * and open the template in the editor.
  */
 
-package com.amf.uitools;
+package main.java.org.zambiesurvival.gui;
 
-/**
- *
- * @author Nelnel33
- */
-public class InfoPane {
+public class ActionPane {
     
 }
