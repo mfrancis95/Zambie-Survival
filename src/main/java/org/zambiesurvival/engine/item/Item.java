@@ -9,9 +9,10 @@ public abstract class Item extends Entity {
     
     protected int quantity;
 
-    public Item(int maxQuantity) {
+    public Item(int maxQuantity, int quantity) {
         super();
         this.maxQuantity = maxQuantity;
+        this.quantity = quantity;
     }
     
     public int getQuantity() {
