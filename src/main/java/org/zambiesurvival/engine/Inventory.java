@@ -10,8 +10,14 @@ public class Inventory {
         items = new Item[slots];
     }
     
-    public void addItem(Item item) {
-        items[0] = item;
+    public boolean addItem(Item item) {
+        for (int i = 0; i < items.length; i++) {
+            if (items[i] == null) {
+                items[i] = item;
+                return true;
+            }
+        }
+        return false;
     }
     
     public Item getItem(int index) {
