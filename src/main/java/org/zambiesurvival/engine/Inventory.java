@@ -19,7 +19,7 @@ public class Inventory {
         }
         return false;
     }
-    
+
     public Item getItem(int index) {
        try {
            return items[index];
@@ -29,8 +29,27 @@ public class Inventory {
        }
     }
     
+    public void checkForDepletion(){
+        for(int i=0;i<items.length;i++){
+            if(items[i] != null && items[i].getQuantity() == 0){
+                items[i] = null;
+            }
+        }
+    }
+    
     public int getSlots() {
         return items.length;
+    }
+    
+    public int getTotalItems() {
+        int counter = 0;
+        for(Item item: items){
+            if(item != null){
+                counter++;
+            }
+        }
+        
+        return counter;
     }
     
 }

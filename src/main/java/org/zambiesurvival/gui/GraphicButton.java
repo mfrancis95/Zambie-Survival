@@ -50,7 +50,7 @@ public class GraphicButton{
      * Executes a certain command when clicked.
      */
     public void executeWhenClicked(){
-        System.out.println("Clicked");
+        //System.out.println("Clicked");
     }
     
     /**
@@ -58,7 +58,7 @@ public class GraphicButton{
      * Executes a certain command when hovering.
      */
     public void executeWhenHovering(){
-        System.out.println("Hovering");
+        //System.out.println("Hovering");
     }
     
     /**
@@ -118,11 +118,11 @@ public class GraphicButton{
                     executeWhenHovering();
                 }
                 else{
-                    System.out.println("State is nothing, does not execute any command");
+                    //System.out.println("State is nothing, does not execute any command");
                 }               
             }
             else if(g[i].getState() == CLICKED && onMove){
-                System.out.println("GraphicButton["+i+"]"+" is clicked and does not update on hover.");
+                //System.out.println("GraphicButton["+i+"]"+" is clicked and does not update on hover.");
             }
             else{
                 g[i].setState(NOTHING);

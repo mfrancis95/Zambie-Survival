@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,14 +19,19 @@ import main.java.org.zambiesurvival.engine.ImageSheet;
 import main.java.org.zambiesurvival.engine.Inventory;
 import main.java.org.zambiesurvival.engine.Location;
 import main.java.org.zambiesurvival.engine.entity.Barricade;
+import main.java.org.zambiesurvival.engine.item.BandageItem;
+import main.java.org.zambiesurvival.engine.item.BarricadeItem;
 import main.java.org.zambiesurvival.engine.item.Item;
 import main.java.org.zambiesurvival.engine.item.MedkitItem;
+import main.java.org.zambiesurvival.gui.InventoryPane;
 
 public class WorldState extends GameStateAdapter {
+    
+    private final Location inventoryPlacement = new Location(648,25);//change if necessary
 
     private int currentEntity, currentEntityActions;
     
-    private Inventory currentInventory;
+    private InventoryPane inventoryPane;
 
     private List<Entity> entities;
 
@@ -56,13 +62,16 @@ public class WorldState extends GameStateAdapter {
 
     public void init() {
         currentEntity = currentEntityActions = 0;
-        currentInventory = null;
+        inventoryPane = new InventoryPane(inventoryPlacement, tileSize);
         tileset = ImageSheet.load("Tileset.png", 32);
         ImageSheet.load("Survivor.png", 32);
         ImageSheet.load("Zambies.png", 32);
         entities = new ArrayList<>();
         addEntity(new Location(5, 7), new Survivor());
         entities.get(0).getInventory().addItem(new MedkitItem());
+        entities.get(0).getInventory().addItem(new BandageItem(4));
+        entities.get(0).getInventory().addItem(new BarricadeItem());
+        entities.get(0).getInventory().addItem(new BandageItem(3));
         addEntity(new Location(14, 7), new Survivor());
         addEntity(new Location(6, 7), new Barricade());
         addEntity(new Location(13, 7), new Barricade());
@@ -81,6 +90,7 @@ public class WorldState extends GameStateAdapter {
         }
     }
 
+    @Override
     public void keyPressed(KeyEvent ke) {
         Entity entity = entities.get(currentEntity);
         if (entity instanceof Survivor && !entity.isMoving()) {
@@ -102,6 +112,16 @@ public class WorldState extends GameStateAdapter {
                 default:
             }
         }
+    }
+    
+    @Override
+    public void mouseClicked(MouseEvent me){
+        inventoryPane.mouseClicked(me, null);
+    }
+    
+    @Override
+    public void mouseMoved(MouseEvent me){
+        inventoryPane.mouseMoved(me, null);
     }
 
     public void render(Graphics2D g) {
@@ -141,23 +161,8 @@ public class WorldState extends GameStateAdapter {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 12));
         g.drawString("Inventory", 654, 20);
-        if (currentInventory != null) {
-            for (int i = 0; i < currentInventory.getSlots(); i++) {
-                Item item = currentInventory.getItem(i);
-                int x = 648 + (i % 2 == 0 ? 0 : 32);
-                int y = 32 * (i / 2 + 1);
-                g.setColor(Color.WHITE);
-                g.fillRect(x, y, 32, 32);
-                g.setColor(Color.GRAY);
-                g.drawRect(x, y, 32, 32);
-                if (item != null) {
-                    item.render(g, x, y);
-                    g.setColor(Color.RED);
-                    g.setFont(new Font("Arial", Font.PLAIN, 12));
-                    g.drawString("" + item.getQuantity(), x + 25, y + 30);
-                }
-            }
-        }
+        
+        inventoryPane.render(g, null);        
     }
     
     public void renderTiles(Graphics2D g) {
@@ -169,7 +174,7 @@ public class WorldState extends GameStateAdapter {
     public void update(Game game) {
         Entity entity = entities.get(currentEntity);
         if (entity instanceof Survivor) {
-            currentInventory = entity.getInventory();
+            inventoryPane.setSurvivor((Survivor) entity);
         }
         if (currentEntityActions < entity.getActions()) {
             if (entity.isMoving()) {
