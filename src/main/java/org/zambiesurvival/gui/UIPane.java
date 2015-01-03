@@ -98,15 +98,17 @@ public class UIPane{
     /**
      * Place into MainGame's MouseAdapter.
      * @param e 
+     * @param container 
+     * JPanel that contains this UIPane
      */
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent e, JPanel container) {
         int x = e.getX();
         int y = e.getY();
         if(x <= (layout.col*size)+placement.x && y <= (layout.row*size)+placement.y &&
             x >= placement.x && y >= placement.y){
             try{
                 int i = calculateMouseIndex(x,y);
-                System.out.println(i);
+                //System.out.println(i);
             
                 GraphicButton curr = buttons[i];
             
@@ -118,13 +120,19 @@ public class UIPane{
                 //System.out.println("Not an nxn matrix(not square)");
             }
         } 
+        
+        if(container != null){
+            container.repaint();
+        }
     }
 
     /**
      * Place into MainGame's MouseAdapter.
      * @param e 
+     * @param container 
+     * JPanel that contains this UIPane
      */
-    public void mouseMoved(MouseEvent e){
+    public void mouseMoved(MouseEvent e, JPanel container){
         int x = e.getX();
         int y = e.getY();            
             
@@ -133,7 +141,7 @@ public class UIPane{
             try{
                 int mi = mouseIndex;
                 int i = calculateMouseIndex(x,y);
-                System.out.println(i);
+                //System.out.println(i);
                 
                 if(i != mi){
                     GraphicButton curr = buttons[i];     
@@ -144,6 +152,10 @@ public class UIPane{
             } catch(ArrayIndexOutOfBoundsException aie){
                 //System.out.println("Not an nxn matrix(not square)");
             }
+        }
+        
+        if(container != null){
+            container.repaint();
         }
     } 
     
@@ -221,9 +233,19 @@ public class UIPane{
 
     public GraphicButton[] getButtons() {
         return buttons;
-    }    
+    }
+    
+    public void setButtons(GraphicButton[] buttons){
+        this.buttons = buttons;
+    }
 
-    public void render(Graphics2D g){
+    /**
+     * Renders the UIPane
+     * @param g
+     * @param container 
+     * JPanel that contains this UIPane
+     */
+    public void render(Graphics2D g, JPanel container){
         //super.paintComponent(og);
         //Graphics2D g = (Graphics2D)og;
         
@@ -236,7 +258,11 @@ public class UIPane{
                     //System.out.println("Not an nxn matrix(not square)");
                 }
             }
-        }        
+        }
+        
+        if(container != null){
+            container.repaint();
+        }
     }
     
     /**
@@ -258,28 +284,26 @@ public class UIPane{
         
         @Override
         public void paintComponent(Graphics g){
-            pane.render((Graphics2D)g);
-            otherpane.render((Graphics2D)g);
-            anotherpane.render((Graphics2D)g);
+            pane.render((Graphics2D)g, this);
+            otherpane.render((Graphics2D)g, this);
+            anotherpane.render((Graphics2D)g, this);
         }
         
         private final MouseAdapter mouse = new MouseAdapter() {      
             
         @Override
         public void mouseClicked(MouseEvent e) {
-            pane.mouseClicked(e);
-            //repaint();
-            otherpane.mouseClicked(e);
-            anotherpane.mouseClicked(e);
+            pane.mouseClicked(e, Test.this);
+            otherpane.mouseClicked(e, Test.this);
+            anotherpane.mouseClicked(e, Test.this);
             repaint();
         }
 
         @Override
         public void mouseMoved(MouseEvent e){
-            pane.mouseMoved(e);
-            //repaint();
-            otherpane.mouseMoved(e);
-            anotherpane.mouseMoved(e);
+            pane.mouseMoved(e, Test.this);
+            otherpane.mouseMoved(e, Test.this);
+            anotherpane.mouseMoved(e, Test.this);
             repaint();
         }          
     }; 
