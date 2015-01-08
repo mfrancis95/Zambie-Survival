@@ -3,9 +3,10 @@ package main.java.org.zambiesurvival.engine;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -14,9 +15,11 @@ public class GameContainer {
     
     private final Game game;
     
-    private final JFrame window;
+    private final boolean volatileImage;
     
-    private final GamePanel gamePanel;
+    private int width, height;
+    
+    private final JFrame window;
     
     private final Timer timer = new Timer(16, new ActionListener() {
 
@@ -27,11 +30,13 @@ public class GameContainer {
         
     });
     
-    public GameContainer(Game game, String title, int width, int height) {
+    public GameContainer(Game game, String title, int width, int height, boolean volatileImage) {
         this.game = game;
         window = new JFrame(title);
-        gamePanel = new GamePanel(width, height);
-        window.add(gamePanel);
+        this.width = width;
+        this.height = height;
+        this.volatileImage = volatileImage;
+        window.setContentPane(new GamePanel()); 
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.pack();
@@ -45,21 +50,24 @@ public class GameContainer {
     
     private class GamePanel extends JPanel {
         
-        GamePanel(int width, int height) {
+        BufferedImage image;
+        
+        GamePanel() {
             super();
+            image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             addKeyListener(game);
             addMouseListener(game);
             addMouseMotionListener(game);
             setFocusable(true);
-            setPreferredSize(new Dimension(width, height));
+            setPreferredSize(new Dimension(width, height));            
         }
         
         public void paintComponent(Graphics bork) {
             super.paintComponent(bork);
-            Graphics2D g = (Graphics2D) bork;
-            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            Image image = volatileImage ? createVolatileImage(width, height) : this.image;
+            Graphics2D g = (Graphics2D) image.getGraphics();
             game.render(g);
-            g.dispose();
+            bork.drawImage(image, 0, 0, null);
         }
         
     }

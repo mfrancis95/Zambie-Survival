@@ -12,7 +12,8 @@ public class ZambieSurvival {
         game.addState("Title", new TitleState());
         game.addState("World", new WorldState(32));
         game.enterState("Title", true);
-        new GameContainer(game, "Zambie Survival", 720, 480).start();
+        GameContainer container = new GameContainer(game, "Zambie Survival", 720, 480, true);
+        container.start();
     }
     
 }
