@@ -6,8 +6,9 @@ public abstract class ArmorItem extends Item {
     
     protected final boolean stackable = false;
     
-    public ArmorItem() {
-        super(1);
+    public ArmorItem(int maxQuantity, int quantity, int defense) {
+        super(maxQuantity, quantity);
+        this.defense = defense;
     }
     
 }
