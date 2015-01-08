@@ -48,6 +48,7 @@ public class InventoryPane extends UIPane{
         if(inventory == null){
             for(int i=0;i<super.getButtons().length;i++){
                 ((InventoryButton)this.getButtons()[i]).setItem(null);
+                ((InventoryButton)this.getButtons()[i]).setItemIndex(-1);
             }
         }
         else{
@@ -55,6 +56,7 @@ public class InventoryPane extends UIPane{
             for(int i=0;i<inventory.getSlots();i++){
                 if(this.getButtons()[i] instanceof InventoryButton){
                     ((InventoryButton)this.getButtons()[i]).setItem(inventory.getItem(i));   
+                    ((InventoryButton)this.getButtons()[i]).setItemIndex(i);
                 }
                 
             }
@@ -63,11 +65,13 @@ public class InventoryPane extends UIPane{
     
     public class InventoryButton extends GraphicButton{ 
         private Item item;
+        private int itemIndex;
         
         public final int itemIconSize = 10;
         
         public InventoryButton(int size) {
             super(size);
+            itemIndex = -1;
         }            
 
         public Item getItem() {
@@ -76,6 +80,14 @@ public class InventoryPane extends UIPane{
 
         public void setItem(Item item) {
             this.item = item;
+        }
+
+        public int getItemIndex() {
+            return itemIndex;
+        }
+
+        public void setItemIndex(int itemIndex) {
+            this.itemIndex = itemIndex;
         }
         
         @Override
@@ -90,15 +102,16 @@ public class InventoryPane extends UIPane{
                 Location dl = new Location(x,y);//drawnLocation.
             
             
-                g.setColor(Color.CYAN);//represents item;
+                g.setColor(Color.BLACK);//represents item;
                 g.fill(new Rectangle2D.Double(x, y, itemIconSize, itemIconSize));
+                g.drawString(""+item.getQuantity(), x, y);
             }
         }
         
         @Override
         public void executeWhenClicked(){
-            if(item != null){
-                item.use();
+            if(item != null && itemIndex != -1){
+                inventory.useItem(itemIndex); //calls inventory in InventoryPane not InventoryButton
                 System.out.println("Item used: "+item.getQuantity());
             }
         }
