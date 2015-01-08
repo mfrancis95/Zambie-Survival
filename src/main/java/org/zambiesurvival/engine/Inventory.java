@@ -37,6 +37,20 @@ public class Inventory {
         }
     }
     
+    public void useItem(int i){
+       try {
+           if(items[i] == null){
+               System.out.println("Item is null");
+           }
+           else{
+               items[i].use();
+           }
+       }
+       catch (ArrayIndexOutOfBoundsException ex) {
+           System.out.println("Out of bounds");
+       }
+    }
+    
     public int getSlots() {
         return items.length;
     }
