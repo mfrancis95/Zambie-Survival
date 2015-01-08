@@ -16,12 +16,10 @@ import java.util.Map;
 import main.java.org.zambiesurvival.engine.Direction;
 import main.java.org.zambiesurvival.engine.Game;
 import main.java.org.zambiesurvival.engine.ImageSheet;
-import main.java.org.zambiesurvival.engine.Inventory;
 import main.java.org.zambiesurvival.engine.Location;
 import main.java.org.zambiesurvival.engine.entity.Barricade;
 import main.java.org.zambiesurvival.engine.item.BandageItem;
 import main.java.org.zambiesurvival.engine.item.BarricadeItem;
-import main.java.org.zambiesurvival.engine.item.Item;
 import main.java.org.zambiesurvival.engine.item.MedkitItem;
 import main.java.org.zambiesurvival.gui.InventoryPane;
 
@@ -90,7 +88,6 @@ public class WorldState extends GameStateAdapter {
         }
     }
 
-    @Override
     public void keyPressed(KeyEvent ke) {
         Entity entity = entities.get(currentEntity);
         if (entity instanceof Survivor && !entity.isMoving()) {
@@ -114,12 +111,10 @@ public class WorldState extends GameStateAdapter {
         }
     }
     
-    @Override
     public void mouseClicked(MouseEvent me){
         inventoryPane.mouseClicked(me, null);
     }
     
-    @Override
     public void mouseMoved(MouseEvent me){
         inventoryPane.mouseMoved(me, null);
     }
