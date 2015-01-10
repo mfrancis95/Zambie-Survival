@@ -21,5 +21,5 @@ public class BarricadeItem extends SpawningItem {
     public void update(WorldState world) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }
