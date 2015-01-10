@@ -15,6 +15,7 @@ public class HealingDecal extends Decal {
         g.setColor(Color.RED);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, health / 100f));
         g.fillOval(worldLocation.x, worldLocation.y, 8, 8);
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
     }
     
     public void update(WorldState world) {
