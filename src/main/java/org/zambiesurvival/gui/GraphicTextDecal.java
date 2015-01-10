@@ -16,6 +16,8 @@ import main.java.org.zambiesurvival.engine.Location;
 public class GraphicTextDecal {        
     public static final int SPACING = 2;
     
+    public static final char[] PUNCTUATION = {'.','!','?'};
+    
     /**
      * What the GraphicTextDecal says.
      */
@@ -68,7 +70,7 @@ public class GraphicTextDecal {
     public GraphicTextDecal(String statement){
         this.statement = statement;
         this.charSize = StringImage.FONT_SIZE;
-        lines = breakStringByChar(statement, '.');
+        lines = breakStringByChar(statement, PUNCTUATION);
         this.charPerLine = largestString(lines).length();
         totalLines = lines.length;
         this.size = new Dimension(charSize*charPerLine, StringImage.HEIGHT*totalLines);
@@ -116,18 +118,53 @@ public class GraphicTextDecal {
         }
         String[] array = new String[numOfChar];
         int q = 0;
-        int counter1=0;
+        int counter=0;
         for(int j=0;j<string.length();j++){
             if(string.charAt(j)==c){
                 String temp = string.substring(q,j+1);
                 String temp2 = temp.trim();
-                array[counter1] = temp2;
+                array[counter] = temp2;
                 q=j+1;
-                counter1++;
+                counter++;
             }           
         }
         return array;        
     }
+    
+    public static String[] breakStringByChar(String string, char[] charArray){
+        int numOfChars = 0;
+        char letter;
+        for(int i=0;i<string.length();i++){//loops to see how many periods there are
+            for(int y=0;y<charArray.length;y++){
+                letter=charArray[y];
+                    if(string.charAt(i)==letter){
+                        numOfChars++;
+                    }
+            }
+        }
+        if(numOfChars == 0){
+            String[] arr = new String[1];
+            arr[0] = string;
+            return arr;
+        }
+        String[] array = new String[numOfChars];
+        int q = 0;
+        int counter=0;
+        for(int j=0;j<string.length();j++){
+            for(int o=0;o<charArray.length;o++){
+                letter=charArray[o];
+                if(string.charAt(j)==letter){
+                    String temp = string.substring(q,j+1);
+                    String temp2 = temp.trim();
+                    array[counter] = temp2;
+                    q=j+1;
+                    counter++;
+                } 
+            }
+        }
+        return array;
+    }
+    
     public static String largestString(String[] array){
         int counter = 0;
         String mostCharacterString = "";
@@ -171,9 +208,10 @@ public class GraphicTextDecal {
         int sx = l.x+(charSize*0);
         int sy = l.y+(charSize*0);
         
-        g.setColor(background);
-        g.fill(new Rectangle2D.Double(l.x, l.y, width, height));
-        
+        if(background != null){
+            g.setColor(background);
+            g.fill(new Rectangle2D.Double(l.x, l.y, width, height));        
+        }
         for(int i=0;i<stringImages.length;i++){
             if(stringImages[i] != null){
                 stringImages[i].render(g, new Location(l.x,l.y+(i*StringImage.HEIGHT)), null);
@@ -190,17 +228,20 @@ public class GraphicTextDecal {
     public static class Test extends JPanel{
         public GraphicTextDecal pane;
         public GraphicTextDecal hitpointSplat;
+        public GraphicTextDecal ex1;
 
         
         public Test() {
-            pane = new GraphicTextDecal("Greetings. I am the one who knocks. I am the one who is the best. I will rape you, motheryaka.");
+            pane = new GraphicTextDecal("Greetings! Am I the one who knocks? I am the one who knocks!");
             hitpointSplat = new GraphicTextDecal("50");
+            ex1 = new GraphicTextDecal("Hello friend. I am the one who knocks.");
         }
         
         @Override
         public void paintComponent(Graphics g){
             pane.render((Graphics2D)g, new Location(10,10), Color.BLACK);
             hitpointSplat.render((Graphics2D)g, new Location(300,300), Color.RED);
+            ex1.render((Graphics2D)g, new Location(200,200), null);
         }
         
     }
