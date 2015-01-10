@@ -21,5 +21,4 @@ public class BandageItem extends HealingItem {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-
 }
