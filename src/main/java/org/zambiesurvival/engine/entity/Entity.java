@@ -12,6 +12,8 @@ public abstract class Entity {
     
     protected Direction destination, direction = Direction.SOUTH;
     
+    protected boolean destroyed;
+    
     protected int health = 100;
     
     protected final Inventory inventory;
@@ -65,6 +67,10 @@ public abstract class Entity {
 
     public Location getWorldLocation() {
         return worldLocation;
+    }
+    
+    public boolean isDestroyed() {
+        return destroyed;
     }
     
     public boolean isMoving() {

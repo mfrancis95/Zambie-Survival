@@ -37,7 +37,7 @@ public class Inventory {
         }
         return added;
     }
-    
+
     public Item getItem(int index) {
        try {
            return items[index];
@@ -47,8 +47,41 @@ public class Inventory {
        }
     }
     
+    public void checkForDepletion(){
+        for(int i=0;i<items.length;i++){
+            if(items[i] != null && items[i].getQuantity() == 0){
+                items[i] = null;
+            }
+        }
+    }
+    
+    public void useItem(int i){
+       try {
+           if(items[i] == null){
+               System.out.println("Item is null");
+           }
+           else{
+               items[i].use();
+           }
+       }
+       catch (ArrayIndexOutOfBoundsException ex) {
+           System.out.println("Out of bounds");
+       }
+    }
+    
     public int getSlots() {
         return items.length;
+    }
+    
+    public int getTotalItems() {
+        int counter = 0;
+        for(Item item: items){
+            if(item != null){
+                counter++;
+            }
+        }
+        
+        return counter;
     }
     
 }

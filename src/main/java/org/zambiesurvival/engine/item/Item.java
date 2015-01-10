@@ -24,4 +24,15 @@ public abstract class Item extends Entity {
         this.quantity = quantity;
     }
     
+    public void effect(){}
+    
+    public boolean use(){
+        if(quantity>0){
+            quantity--;
+            effect();
+            return true;
+        }
+        return false;
+    }
+    
 }
