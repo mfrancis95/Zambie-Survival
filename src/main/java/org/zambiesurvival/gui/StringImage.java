@@ -155,6 +155,9 @@ public class StringImage {
         else if(ci == '#'){
             return font.getImage(new Location(3,2));
         }
+        else if(ci == '?'){
+            return font.getImage(new Location(15,3));
+        }
         
         throw new CharacterNotSupportedException("Character "+c+" is not supported in StringImage");
     }
