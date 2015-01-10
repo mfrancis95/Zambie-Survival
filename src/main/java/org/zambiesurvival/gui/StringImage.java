@@ -16,29 +16,33 @@ import main.java.org.zambiesurvival.engine.Location;
  */
 public class StringImage {
     /**
-     * Spacing between each character.
-     */
-    public static final int SPACING = 2;
-    /**
      * Size of the font in pixels.
      */
-    public static final int FONT_SIZE = 8;
+    public final int fontSize;
+    /**
+     * Spacing between each character.
+     */
+    public final int spacing;
     
-    public static final int HEIGHT = (SPACING*2)+FONT_SIZE;
+    public final int height;
     
-    private static final ImageSheet font = ImageSheet.load("font.png", FONT_SIZE);
+    private static final ImageSheet font = ImageSheet.load("font.png", 8);//is 8 because of the tilesize in the picture! DONOT CHANGE!
     
     private final String string;
     
     private final BufferedImage[] images;
 
-    public StringImage(String string){
+    public StringImage(String string, int fontSize){
         if(string == null){
             this.string = "";
         }
         else{
             this.string = string;
         }
+        
+        this.fontSize = fontSize;
+        spacing = GraphicTextDecal.calculateSpacing(fontSize);
+        height  = GraphicTextDecal.calculateHeight(fontSize);
         
         images = new BufferedImage[this.string.length()];
         createImages();
@@ -61,14 +65,14 @@ public class StringImage {
     
     public void render(Graphics2D g, Location l, Color background){
         if(background != null){
-            int bwidth = (FONT_SIZE*string.length());// + (string.length()+1)*SPACING;
-            int bheight = HEIGHT;
+            int bwidth = (fontSize*string.length());// + (string.length()+1)*spacing;
+            int bheight = height;
             g.setColor(background);
             g.fill(new Rectangle2D.Double(l.x, l.y, bwidth, bheight));
         }
         
         for(int i=0;i<images.length;i++){
-            g.drawImage(images[i], l.x + (FONT_SIZE*i) + (FONT_SIZE/4), l.y + (SPACING), null);
+            g.drawImage(images[i], l.x + (fontSize*i) + (fontSize/4), l.y + (spacing),fontSize,fontSize, null);
         }       
     }
     
