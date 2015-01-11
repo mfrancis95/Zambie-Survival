@@ -18,21 +18,44 @@ public class StringImage {
     /**
      * Size of the font in pixels.
      */
-    public final int fontSize;
+    private final int fontSize;
+    
+    /**
+     * Location of the StringImage.
+     */
+    private final Location location;
+    
+    /**
+     * Color of the Background.
+     */
+    private Color background;
+    
     /**
      * Spacing between each character.
      */
-    public final int spacing;
+    private final int spacing;
     
-    public final int height;
+    /**
+     * Height of the StringImage.
+     */
+    private final int height;
     
+    /**
+     * Image where the font for the StringImage is loaded.
+     */
     private static final ImageSheet font = ImageSheet.load("font.png", 8);//is 8 because of the tilesize in the picture! DONOT CHANGE!
     
+    /**
+     * The String that will be displayed for the StringImage.
+     */
     private final String string;
     
+    /**
+     * Array of images that represent each character of the String.
+     */
     private final BufferedImage[] images;
 
-    public StringImage(String string, int fontSize){
+    public StringImage(String string, int fontSize, Location location, Color background){
         if(string == null){
             this.string = "";
         }
@@ -41,11 +64,22 @@ public class StringImage {
         }
         
         this.fontSize = fontSize;
-        spacing = GraphicTextDecal.calculateSpacing(fontSize);
-        height  = GraphicTextDecal.calculateHeight(fontSize);
+        this.location = location;
+        this.background = background;
+        spacing = calculateSpacing(fontSize);
+        height  = calculateHeight(fontSize);
         
         images = new BufferedImage[this.string.length()];
         createImages();
+    }
+    
+    public static int calculateHeight(int fontSize) {
+        int s = calculateSpacing(fontSize);
+        return fontSize + (2 * s);
+    }
+
+    public static int calculateSpacing(int fontSize) {
+        return fontSize / 4;
     }
     
     private void createImages(){
@@ -63,7 +97,9 @@ public class StringImage {
         return images[i];
     }
     
-    public void render(Graphics2D g, Location l, Color background){
+    public void render(Graphics2D g){
+        Location l = this.location;
+        
         if(background != null){
             int bwidth = (fontSize*string.length());// + (string.length()+1)*spacing;
             int bheight = height;
