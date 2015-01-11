@@ -18,13 +18,16 @@ public class GraphicTextDecal {
     /**
      * Spacing between each character and row of characters.
      */
-    public final int spacing;
+    private final int spacing;
     
     /**
      * Height of each row of words.
      */
-    public final int height;
+    private final int height;
     
+    /**
+     * Supported Punctuation to break at.
+     */
     public static final char[] PUNCTUATION = {'.','!','?'};
     
     /**
@@ -48,6 +51,17 @@ public class GraphicTextDecal {
     private final int charPerLine;
     
     /**
+     * Location of the GraphicTextDecal.
+     */
+    private final Location location;
+    
+    /**
+     * Color of the background.
+     * If null then transparent background.
+     */
+    private final Color background;
+    
+    /**
      * Total number of lines in the GraphicTextDecal.
      */
     private final int totalLines;
@@ -62,13 +76,18 @@ public class GraphicTextDecal {
      */
     private final StringImage[] stringImages;     
     
+    
     public GraphicTextDecal(
             String statement,   
             int charPerLine,
-            int fontSize) {
+            int fontSize,
+            Location location,
+            Color background) {
         this.statement = statement;
         this.fontSize = fontSize;
         this.charPerLine = charPerLine;
+        this.location = location;
+        this.background = background;
         if(statement.length()%charPerLine == 0){
             this.totalLines = statement.length()/charPerLine;
         }
@@ -76,8 +95,8 @@ public class GraphicTextDecal {
             this.totalLines = (statement.length()/charPerLine)+1;
         }
         
-        spacing = calculateSpacing(fontSize);
-        height = calculateHeight(fontSize);
+        spacing = StringImage.calculateSpacing(fontSize);
+        height = StringImage.calculateHeight(fontSize);
         
         this.size = new Dimension(fontSize*charPerLine, height*totalLines);
         
@@ -87,29 +106,26 @@ public class GraphicTextDecal {
         createStringImages();
     }
     
-    public GraphicTextDecal(String statement, int fontSize){
+    public GraphicTextDecal(
+            String statement,
+            int fontSize,
+            Location location, 
+            Color background){
         this.statement = statement;
         this.fontSize = fontSize;
+        this.location = location;
+        this.background = background;
         lines = breakStringByChar(statement, PUNCTUATION);
         this.charPerLine = largestString(lines).length();
         totalLines = lines.length;
         
-        spacing = calculateSpacing(fontSize);
-        height = calculateHeight(fontSize);
+        spacing = StringImage.calculateSpacing(fontSize);
+        height = StringImage.calculateHeight(fontSize);
         
         this.size = new Dimension(fontSize*charPerLine, height*totalLines);
         
         stringImages = new StringImage[totalLines];
         createStringImages();
-    }
-    
-    public static int calculateSpacing(int fontSize){
-        return fontSize/4;
-    }
-    
-    public static int calculateHeight(int fontSize){
-        int s = calculateSpacing(fontSize);
-        return fontSize+(2*s);
     }
     
     private void breakString(){
@@ -133,7 +149,7 @@ public class GraphicTextDecal {
                 break;
             }
             else{
-                stringImages[i] = new StringImage(lines[i],fontSize);
+                stringImages[i] = new StringImage(lines[i],fontSize, new Location(location.x,location.y+(i*this.height)), null);
             }
         }
     }
@@ -235,17 +251,14 @@ public class GraphicTextDecal {
         return size;
     }
     
-    public void render(Graphics2D g, Location l, Color background){
-        int width = size.width;
-        int height = size.height;
-
+    public void render(Graphics2D g){
         if(background != null){
             g.setColor(background);
-            g.fill(new Rectangle2D.Double(l.x, l.y, width, height));        
+            g.fill(new Rectangle2D.Double(location.x, location.y, size.width, size.height));        
         }
         for(int i=0;i<stringImages.length;i++){
             if(stringImages[i] != null){
-                stringImages[i].render(g, new Location(l.x,l.y+(i*this.height)), null);
+                stringImages[i].render(g);
             }
             else{
                 System.out.println("stringImages["+i+"] was not rendered because it is null");
@@ -263,16 +276,16 @@ public class GraphicTextDecal {
 
         
         public Test() {
-            pane = new GraphicTextDecal("Greetings! Am I the one who knocks? I am the one who knocks!", 16);
-            hitpointSplat = new GraphicTextDecal("50",16);
-            ex1 = new GraphicTextDecal("Hello friend. I am the one who knocks.",8);
+            pane = new GraphicTextDecal("Greetings! Am I the one who knocks? I am the one who knocks!", 12,  new Location(10,10), Color.BLACK);
+            hitpointSplat = new GraphicTextDecal("50",64, new Location(300,300), Color.RED);
+            ex1 = new GraphicTextDecal("Hello friend. I am the one who knocks.",8,  new Location(200,200), null);
         }
         
         @Override
         public void paintComponent(Graphics g){
-            pane.render((Graphics2D)g, new Location(10,10), Color.BLACK);
-            hitpointSplat.render((Graphics2D)g, new Location(300,300), Color.RED);
-            ex1.render((Graphics2D)g, new Location(200,200), null);
+            pane.render((Graphics2D)g);
+            hitpointSplat.render((Graphics2D)g);
+            ex1.render((Graphics2D)g);
             
             
         }
