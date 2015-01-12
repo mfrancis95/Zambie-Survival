@@ -2,6 +2,7 @@ package main.java.org.zambiesurvival.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 import main.java.org.zambiesurvival.engine.Inventory;
@@ -20,6 +21,26 @@ public class InventoryPane extends UIPane{
      * Survivor at the current location.
      */
     private Survivor survivor;
+    
+    /**
+     * Place into MainGame's MouseAdapter.
+     * @param e 
+     * @param container 
+     */
+    @Override
+    public void mouseClicked(MouseEvent e, JPanel container) {
+        super.mouseClicked(e,container);
+    }
+
+    /**
+     * Place into MainGame's MouseAdapter.
+     * @param e 
+     * @param container 
+     */
+    @Override
+    public void mouseMoved(MouseEvent e, JPanel container){
+        super.mouseClicked(e,container);
+    } 
 
     public InventoryPane(Location placement, int size) {
         super(4,size, new MatrixDimension(2,2), placement);
