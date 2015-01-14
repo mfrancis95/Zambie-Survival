@@ -32,7 +32,7 @@ public abstract class Entity {
     
     public Entity(int actions, int inventorySlots) {
         this.actions = actions;
-        inventory = new Inventory(inventorySlots);
+        inventory = new Inventory(this, inventorySlots);
     }
     
     public void endAction() {
@@ -126,4 +126,9 @@ public abstract class Entity {
     
     public abstract void update(WorldState world);
     
+    @Override
+    public String toString(){
+        return "Entity; mapLocation="+mapLocation.toString()+
+                "; worldLocation="+worldLocation.toString();
+    }
 }

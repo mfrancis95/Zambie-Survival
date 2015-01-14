@@ -25,16 +25,18 @@ public abstract class Item extends Entity {
         this.quantity = quantity;
     }
 
-    public void effect() {
+    public void effect(Entity entity){
     }
 
-    public boolean use() {
+    public boolean use(Entity entity) {
         if (quantity > 0) {
             quantity--;
-            effect();
+            effect(entity);
             return true;
         }
         return false;
     }
+    
+    
 
 }

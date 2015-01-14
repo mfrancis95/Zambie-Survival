@@ -25,6 +25,7 @@ import main.java.org.zambiesurvival.engine.entity.decal.HealingDecal;
 import main.java.org.zambiesurvival.engine.item.BandageItem;
 import main.java.org.zambiesurvival.engine.item.BarricadeItem;
 import main.java.org.zambiesurvival.engine.item.MedkitItem;
+import main.java.org.zambiesurvival.gui.GraphicButton;
 import main.java.org.zambiesurvival.gui.InventoryPane;
 
 public class WorldState extends GameStateAdapter {
@@ -62,8 +63,12 @@ public class WorldState extends GameStateAdapter {
         entities.add(entity);
     }
     
-    public Entity getclickedEntity() {
+    public Entity getClickedEntity() {
         return clickedEntity;
+    }
+    
+    public Entity getEntityAtMouse(MouseEvent me){
+        return getEntity(new Location(me.getX() / tileSize, me.getY() / tileSize));
     }
 
     public Entity getEntity(Location mapLocation) {
@@ -83,6 +88,7 @@ public class WorldState extends GameStateAdapter {
         ImageSheet.load("Zambies.png", 32);
         decals = new LinkedList<>();
         entities = new ArrayList<>();
+        
         addEntity(new Location(5, 7), new Survivor());
         entities.get(0).getInventory().addItem(new MedkitItem());
         entities.get(0).getInventory().addItem(new BandageItem(4));
@@ -92,6 +98,7 @@ public class WorldState extends GameStateAdapter {
         addEntity(new Location(14, 7), new Survivor());
         addEntity(new Location(6, 7), new Barricade());
         addEntity(new Location(13, 7), new Barricade());
+        
         for (int i = 0; i < 10; i++) {
             Location location = new Location((int) (Math.random() * 20), (int) (Math.random() * 15));
             while (getEntity(location) != null) {
@@ -130,11 +137,36 @@ public class WorldState extends GameStateAdapter {
         }
     }
     
+    @Override
     public void mouseClicked(MouseEvent me) {
         inventoryPane.mouseClicked(me, null);
-        clickedEntity = getEntity(new Location(me.getX() / tileSize, me.getY() / tileSize));
+        clickedEntity = getEntityAtMouse(me);
+        inventoryPaneManager(inventoryPane, clickedEntity, me);
     }
     
+    /**
+     * Each item use needs to decrement the entity who used the item's actions.
+     * Not sure how to do that.
+     * @param inventoryPane
+     * @param useOn 
+     */
+    private void inventoryPaneManager(InventoryPane inventoryPane, Entity useOn, MouseEvent me){
+        if(inventoryPane.hasSelectedButton()){
+            if(useOn != null){
+                inventoryPane.getInventory().useItem(inventoryPane.getCurrentItemIndex(), useOn);
+                System.out.println(useOn.toString());       
+                inventoryPane.setHasSelectedButton(false);
+                inventoryPane.getButton(inventoryPane.getCurrentItemIndex()).setState(GraphicButton.NOTHING);
+                System.out.println("useItem set to false.");
+            }
+        }
+        if(useOn == null && !inventoryPane.isWithinBounds(me)){
+            inventoryPane.setHasSelectedButton(false);
+            inventoryPane.getButton(inventoryPane.getCurrentItemIndex()).setState(GraphicButton.NOTHING);
+        }   
+    }
+    
+    @Override
     public void mouseMoved(MouseEvent me) {
         inventoryPane.mouseMoved(me, null);
     }

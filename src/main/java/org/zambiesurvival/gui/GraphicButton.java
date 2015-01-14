@@ -19,12 +19,14 @@ public class GraphicButton{
     public static final int NOTHING = 0;
     public static final int HOVERING = 1;
     public static final int CLICKED = 2;
-    
+       
     private int state;    
     private int size;
+    private final UIPane pane;
         
-    public GraphicButton(int size){
+    public GraphicButton(int size, UIPane pane){
         this.size = size;
+        this.pane = pane;
         
         this.state = NOTHING;
     }
@@ -50,7 +52,7 @@ public class GraphicButton{
      * Executes a certain command when clicked.
      */
     public void executeWhenClicked(){
-        //System.out.println("Clicked");
+        
     }
     
     /**
@@ -58,7 +60,7 @@ public class GraphicButton{
      * Executes a certain command when hovering.
      */
     public void executeWhenHovering(){
-        //System.out.println("Hovering");
+        
     }
     
     /**
