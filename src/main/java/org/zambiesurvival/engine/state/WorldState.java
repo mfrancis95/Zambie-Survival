@@ -29,6 +29,8 @@ import main.java.org.zambiesurvival.gui.InventoryPane;
 
 public class WorldState extends GameStateAdapter {
     
+    private Entity clickedEntity;
+    
     private final Location inventoryPlacement = new Location(648,25);//change if necessary
 
     private int currentEntity, currentEntityActions;
@@ -58,6 +60,10 @@ public class WorldState extends GameStateAdapter {
         entity.setMapLocation(mapLocation);
         entity.setWorldLocation(new Location(mapLocation.x * tileSize, mapLocation.y * tileSize - 8));
         entities.add(entity);
+    }
+    
+    public Entity getclickedEntity() {
+        return clickedEntity;
     }
 
     public Entity getEntity(Location mapLocation) {
@@ -124,11 +130,12 @@ public class WorldState extends GameStateAdapter {
         }
     }
     
-    public void mouseClicked(MouseEvent me){
+    public void mouseClicked(MouseEvent me) {
         inventoryPane.mouseClicked(me, null);
+        clickedEntity = getEntity(new Location(me.getX() / tileSize, me.getY() / tileSize));
     }
     
-    public void mouseMoved(MouseEvent me){
+    public void mouseMoved(MouseEvent me) {
         inventoryPane.mouseMoved(me, null);
     }
 
