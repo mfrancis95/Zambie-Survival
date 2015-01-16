@@ -1,6 +1,5 @@
 package main.java.org.zambiesurvival.gui;
 
-import main.java.org.zambiesurvival.engine.Location;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -9,16 +8,20 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import main.java.org.zambiesurvival.engine.Location;
+import main.java.org.zambiesurvival.engine.entity.Entity;
+import main.java.org.zambiesurvival.engine.entity.Survivor;
+import main.java.org.zambiesurvival.engine.entity.decal.Decal;
 
 /**
  *
  * @author Nelnel33
  */
-public class UIPane{
+public class UIPane{    
     /**
      * Total number of buttons in this pane.
      */
-    public final int totalItems;
+    public final int totalButtons;
     
     /**
      * Size of the each button in pane.
@@ -47,53 +50,20 @@ public class UIPane{
     
     private GraphicButton[] buttons;
     
-    /*
-    private final MouseAdapter mouse = new MouseAdapter() {        
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            int x = e.getX();
-            int y = e.getY();
-            if(x <= layout.col*size && y <= layout.row*size){
-                try{
-                    int i = calculateMouseIndex(x,y);
-                    System.out.println(i);
-            
-                    GraphicButton curr = buttons[i];
-            
-                    curr.update(buttons, i, GraphicButton.CLICKED);
-                
-                    //repaint();
-                
-                } catch(ArrayIndexOutOfBoundsException aie){
-                    System.out.println("Not an nxn matrix(not square)");
-                }
-            } 
-        }
-
-        @Override
-        public void mouseMoved(MouseEvent e){
-            int x = e.getX();
-            int y = e.getY();            
-            
-            if(x <= layout.col*size && y <= layout.row*size){
-                try{
-                    int mi = mouseIndex;
-                    int i = calculateMouseIndex(x,y);
-                    System.out.println(i);
-                    
-                    if(i != mi){
-                        GraphicButton curr = buttons[i];            
-                        curr.update(buttons, i, GraphicButton.HOVERING);
-                
-                        //repaint();
-                    }
-                } catch(ArrayIndexOutOfBoundsException aie){
-                    System.out.println("Not an nxn matrix(not square)");
-                }
-            }
-        }          
-    };    
-    */
+    /**
+     * Survivor at the current location.
+     */
+    private Survivor survivor;
+    
+    /**
+     * Current selected item's index.
+     */
+    private int currentItemIndex;
+    
+    /**
+     * True if the player has selected an item in the inventory.
+     */
+    private boolean hasSelectedButton;
     
     /**
      * Place into MainGame's MouseAdapter.
@@ -104,15 +74,14 @@ public class UIPane{
     public void mouseClicked(MouseEvent e, JPanel container) {
         int x = e.getX();
         int y = e.getY();
-        if(x <= (layout.col*size)+placement.x && y <= (layout.row*size)+placement.y &&
-            x >= placement.x && y >= placement.y){
+        if(isWithinBounds(e)){
             try{
                 int i = calculateMouseIndex(x,y);
                 //System.out.println(i);
             
                 GraphicButton curr = buttons[i];
             
-                curr.update(buttons, i, GraphicButton.CLICKED, false);
+                curr.update(buttons, i, GraphicButton.CLICKED, false, e);
                 
                 //repaint();
                 
@@ -136,28 +105,53 @@ public class UIPane{
         int x = e.getX();
         int y = e.getY();            
             
-        if(x <= (layout.col*size)+placement.x && y <= (layout.row*size)+placement.y &&
-            x >= placement.x && y >= placement.y){
+        if(isWithinBounds(e)){
             try{
                 int mi = mouseIndex;
                 int i = calculateMouseIndex(x,y);
-                //System.out.println(i);
                 
                 if(i != mi){
                     GraphicButton curr = buttons[i];     
-                    curr.update(buttons, i, GraphicButton.HOVERING, true);
-                    
-                    //repaint();
+                    curr.update(buttons, i, GraphicButton.HOVERING, true, e);
                 }
             } catch(ArrayIndexOutOfBoundsException aie){
+                resetAllButtons();
                 //System.out.println("Not an nxn matrix(not square)");
             }
+        }
+        else{
+            resetAllButtons();
         }
         
         if(container != null){
             container.repaint();
         }
     } 
+    
+    public void cancelOperation(MouseEvent me){
+        if(!this.isWithinBounds(me)){
+            this.setHasSelectedButton(false);
+            this.getButton(this.getCurrentItemIndex()).setState(GraphicButton.NOTHING);
+        }   
+    }
+    
+    public boolean isWithinBounds(MouseEvent e){
+        int x = e.getX();
+        int y = e.getY();
+        return x <= (layout.col*size)+placement.x && y <= (layout.row*size)+placement.y &&
+            x >= placement.x && y >= placement.y;
+    }    
+    /**
+     * Resets all buttons that are hovering(yellow)
+     * DOES NOT reset ones that are clicked(green).
+     */
+    public void resetAllButtons(){
+        for(int i=0;i<buttons.length;i++){
+            if(buttons[i].getState() != GraphicButton.CLICKED){
+                buttons[i].setState(GraphicButton.NOTHING);
+            }
+        }
+    }
     
     /**
      * Calculates the index of the button being pressed.
@@ -205,12 +199,12 @@ public class UIPane{
      * @throws IllegalArgumentException
      */
     public UIPane(int TOTAL_ITEMS, int ICON_SIZE, MatrixDimension LAYOUT, Location placement) throws IllegalArgumentException {
-        this.totalItems = TOTAL_ITEMS;
+        this.totalButtons = TOTAL_ITEMS;
         this.size = ICON_SIZE;
         this.layout = LAYOUT;
         this.placement = placement;
         
-        if(layout.col*layout.row < totalItems){
+        if(layout.col*layout.row < totalButtons){
             throw new IllegalArgumentException("Cannot have more items then matrix is able to hold.");
         }
         
@@ -219,24 +213,67 @@ public class UIPane{
         buttons = new GraphicButton[TOTAL_ITEMS];
         
         for(int i=0;i<TOTAL_ITEMS;i++){
-            buttons[i] = new GraphicButton(ICON_SIZE);
+            buttons[i] = new GraphicButton(ICON_SIZE, this);
         }
-        //this.addMouseListener(mouse);
-        //this.addMouseMotionListener(mouse);
-       
-        //setBackground(Color.BLUE);
+        
+        hasSelectedButton = false;
+
     }   
 
     public int getMouseIndex() {
         return mouseIndex;
     }
-
-    public GraphicButton[] getButtons() {
-        return buttons;
+    
+    public void setSurvivor(Survivor s){
+        survivor = s;
     }
     
-    public void setButtons(GraphicButton[] buttons){
-        this.buttons = buttons;
+    public Entity getSurvivor(){
+        return survivor;
+    }
+
+    public int getCurrentItemIndex() {
+        return currentItemIndex;
+    }
+
+    public void setCurrentItemIndex(int currentItemIndex) {
+        this.currentItemIndex = currentItemIndex;
+    }
+    
+    public boolean hasSelectedButton() {
+        return hasSelectedButton;
+    }
+
+    public void setHasSelectedButton(boolean hasSelectedButton) {
+        this.hasSelectedButton = hasSelectedButton;
+    }
+    
+    public GraphicButton getButton(int index){
+        return buttons[index];
+    }
+    
+    public void setButton(int index, GraphicButton button){
+        buttons[index] = button;
+    }    
+
+    public int getTotalButtons() {
+        return totalButtons;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public Dimension getDimension() {
+        return dimension;
+    }
+
+    public MatrixDimension getLayout() {
+        return layout;
+    }
+
+    public Location getPlacement() {
+        return placement;
     }
 
     /**
@@ -246,14 +283,27 @@ public class UIPane{
      * JPanel that contains this UIPane
      */
     public void render(Graphics2D g, JPanel container){
-        //super.paintComponent(og);
-        //Graphics2D g = (Graphics2D)og;
-        
         for(int c=0;c<layout.col;c++){
             for(int r=0;r<layout.row;r++){
                 int z = convertMatrixToVectorIndex(r+1,c, layout.col);
                 try{
                     buttons[z].drawButtonIcon(g, new Location(placement.x+(c*size), placement.y+(r*size)));
+                    if(buttons[z].getToolTip() != null && buttons[z].getState() == GraphicButton.HOVERING){
+                        buttons[z].getToolTip().render(g);
+                    }
+                } catch(ArrayIndexOutOfBoundsException aie){
+                    //System.out.println("Not an nxn matrix(not square)");
+                }
+            }
+        }
+        
+        for(int ci=0;ci<layout.col;ci++){
+            for(int ri=0;ri<layout.row;ri++){
+                int w = convertMatrixToVectorIndex(ri+1,ci, layout.col);
+                try{
+                    if(buttons[w].getToolTip() != null && buttons[w].getState() == GraphicButton.HOVERING){
+                        buttons[w].getToolTip().render(g);
+                    }
                 } catch(ArrayIndexOutOfBoundsException aie){
                     //System.out.println("Not an nxn matrix(not square)");
                 }

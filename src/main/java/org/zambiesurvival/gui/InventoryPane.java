@@ -2,12 +2,14 @@ package main.java.org.zambiesurvival.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 import main.java.org.zambiesurvival.engine.Inventory;
-import main.java.org.zambiesurvival.engine.entity.Entity;
 import main.java.org.zambiesurvival.engine.Location;
+import main.java.org.zambiesurvival.engine.entity.Entity;
 import main.java.org.zambiesurvival.engine.entity.Survivor;
+import main.java.org.zambiesurvival.engine.entity.decal.TextDecal;
 import main.java.org.zambiesurvival.engine.item.Item;
 
 public class InventoryPane extends UIPane{
@@ -17,25 +19,44 @@ public class InventoryPane extends UIPane{
     private Inventory inventory;
     
     /**
-     * Survivor at the current location.
+     * Place into MainGame's MouseAdapter.
+     * @param e 
+     * @param container 
      */
-    private Survivor survivor;
+    @Override
+    public void mouseClicked(MouseEvent e, JPanel container) {
+        super.mouseClicked(e,container);
+    }
+
+    /**
+     * Place into MainGame's MouseAdapter.
+     * @param e 
+     * @param container 
+     */
+    @Override
+    public void mouseMoved(MouseEvent e, JPanel container){
+        super.mouseMoved(e,container);
+    } 
 
     public InventoryPane(Location placement, int size) {
         super(4,size, new MatrixDimension(2,2), placement);
         
-        for(int i=0;i<super.getButtons().length;i++){
-            super.getButtons()[i] = new InventoryButton(size);
+        for(int i=0;i<super.getTotalButtons();i++){
+            super.setButton(i, new InventoryButton(size, this));
         }
     }
     
+    @Override
     public void setSurvivor(Survivor s){
-        survivor = s;
         inventory = s.getInventory();
     }
-    
-    public Entity getSurvivor(){
-        return survivor;
+
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
     
     @Override
@@ -46,21 +67,40 @@ public class InventoryPane extends UIPane{
     
     private void updateItems(){
         if(inventory == null){
-            for(int i=0;i<super.getButtons().length;i++){
-                ((InventoryButton)this.getButtons()[i]).setItem(null);
-                ((InventoryButton)this.getButtons()[i]).setItemIndex(-1);
+            for(int i=0;i<super.getTotalButtons();i++){
+                ((InventoryButton)this.getButton(i)).setItem(null);
+                ((InventoryButton)this.getButton(i)).setItemIndex(-1);
             }
         }
         else{
             inventory.checkForDepletion();
             for(int i=0;i<inventory.getSlots();i++){
-                if(this.getButtons()[i] instanceof InventoryButton){
-                    ((InventoryButton)this.getButtons()[i]).setItem(inventory.getItem(i));   
-                    ((InventoryButton)this.getButtons()[i]).setItemIndex(i);
+                if(this.getButton(i) instanceof InventoryButton){
+                    ((InventoryButton)this.getButton(i)).setItem(inventory.getItem(i));   
+                    ((InventoryButton)this.getButton(i)).setItemIndex(i);
                 }
                 
             }
         }
+    }
+    
+     /**
+     * Each item use needs to decrement the entity who used the item's actions.
+     * Not sure how to do that.
+     * @param useOn 
+     * @param me 
+     */
+    public void inventoryPaneManager(Entity useOn, MouseEvent me){
+        if(this.hasSelectedButton()){
+            if(useOn != null){
+                this.getInventory().useItem(this.getCurrentItemIndex(), useOn);
+                System.out.println(useOn.toString());       
+                cancelOperation(me);
+            }
+        }
+        if(useOn == null){
+            cancelOperation(me);
+        }   
     }
     
     public class InventoryButton extends GraphicButton{ 
@@ -69,8 +109,8 @@ public class InventoryPane extends UIPane{
         
         public final int itemIconSize = 10;
         
-        public InventoryButton(int size) {
-            super(size);
+        public InventoryButton(int size, InventoryPane pane) {
+            super(size, pane);
             itemIndex = -1;
         }            
 
@@ -101,7 +141,6 @@ public class InventoryPane extends UIPane{
                     
                 Location dl = new Location(x,y);//drawnLocation.
             
-            
                 g.setColor(Color.BLACK);//represents item;
                 g.fill(new Rectangle2D.Double(x, y, itemIconSize, itemIconSize));
                 g.drawString(""+item.getQuantity(), x, y);
@@ -109,16 +148,28 @@ public class InventoryPane extends UIPane{
         }
         
         @Override
-        public void executeWhenClicked(){
+        public void executeWhenClicked(MouseEvent me){
             if(item != null && itemIndex != -1){
-                inventory.useItem(itemIndex); //calls inventory in InventoryPane not InventoryButton
-                System.out.println("Item used: "+item.getQuantity());
+                InventoryPane.super.setHasSelectedButton(true);
+                InventoryPane.super.setCurrentItemIndex(this.itemIndex);
             }
         }
 
         @Override
-        public void executeWhenHovering(){
-            //System.out.println("Hovering");
+        public void executeWhenHovering(MouseEvent me){
+            if(item != null && itemIndex != -1){
+                int x = me.getX();
+                int y = me.getY();
+                
+                
+                String info = item.getName()+"."+"Amt: "+item.getQuantity()+"."+item.getDescription();
+                GraphicTextDecal gt = new GraphicTextDecal(info, 8, new Location(x,y), Color.BLACK, false);
+                TextDecal tt = new TextDecal(gt, 300);
+                this.setToolTip(tt);
+            }
+            else{
+                this.setToolTip(null);
+            }
         }
         
     }

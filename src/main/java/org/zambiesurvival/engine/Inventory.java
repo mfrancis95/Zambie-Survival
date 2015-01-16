@@ -1,14 +1,22 @@
 package main.java.org.zambiesurvival.engine;
 
+import main.java.org.zambiesurvival.engine.entity.Entity;
 import main.java.org.zambiesurvival.engine.item.BandageItem;
 import main.java.org.zambiesurvival.engine.item.Item;
 
 public class Inventory {
     
+    private final Entity entity;
+    
     private final Item[] items;
     
-    public Inventory(int slots) {
+    public Inventory(Entity entity, int slots) {
+        this.entity = entity;
         items = new Item[slots];
+    }
+
+    public Entity getEntity() {
+        return entity;
     }
     
     public boolean addItem(Item item) {
@@ -55,13 +63,13 @@ public class Inventory {
         }
     }
     
-    public void useItem(int i){
+    public void useItem(int i, Entity entity){
        try {
            if(items[i] == null){
                System.out.println("Item is null");
            }
            else{
-               items[i].use();
+               items[i].use(entity);
            }
        }
        catch (ArrayIndexOutOfBoundsException ex) {

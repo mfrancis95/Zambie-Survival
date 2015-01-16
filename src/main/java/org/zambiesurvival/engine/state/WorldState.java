@@ -1,8 +1,5 @@
 package main.java.org.zambiesurvival.engine.state;
 
-import main.java.org.zambiesurvival.engine.entity.Survivor;
-import main.java.org.zambiesurvival.engine.entity.Entity;
-import main.java.org.zambiesurvival.engine.entity.Zambie;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -20,11 +17,20 @@ import main.java.org.zambiesurvival.engine.Game;
 import main.java.org.zambiesurvival.engine.ImageSheet;
 import main.java.org.zambiesurvival.engine.Location;
 import main.java.org.zambiesurvival.engine.entity.Barricade;
+import main.java.org.zambiesurvival.engine.entity.Entity;
+import main.java.org.zambiesurvival.engine.entity.Survivor;
+import main.java.org.zambiesurvival.engine.entity.Zambie;
+import main.java.org.zambiesurvival.engine.entity.decal.DamageDecal;
 import main.java.org.zambiesurvival.engine.entity.decal.Decal;
+import main.java.org.zambiesurvival.engine.entity.decal.FadingDecal;
 import main.java.org.zambiesurvival.engine.entity.decal.HealingDecal;
+import main.java.org.zambiesurvival.engine.entity.decal.TextDecal;
 import main.java.org.zambiesurvival.engine.item.BandageItem;
 import main.java.org.zambiesurvival.engine.item.BarricadeItem;
+import main.java.org.zambiesurvival.engine.item.BigGunItem;
 import main.java.org.zambiesurvival.engine.item.MedkitItem;
+import main.java.org.zambiesurvival.gui.GraphicButton;
+import main.java.org.zambiesurvival.gui.GraphicTextDecal;
 import main.java.org.zambiesurvival.gui.InventoryPane;
 
 public class WorldState extends GameStateAdapter {
@@ -55,6 +61,11 @@ public class WorldState extends GameStateAdapter {
         decal.setWorldLocation(worldLocation);
         decals.add(decal);
     }
+    
+    public void addTextDecal(TextDecal decal){
+        decal.setWorldLocation(decal.graphicTextDecal.getLocation());
+        decals.add(decal);
+    }
 
     public void addEntity(Location mapLocation, Entity entity) {
         entity.setMapLocation(mapLocation);
@@ -62,8 +73,12 @@ public class WorldState extends GameStateAdapter {
         entities.add(entity);
     }
     
-    public Entity getclickedEntity() {
+    public Entity getClickedEntity() {
         return clickedEntity;
+    }
+    
+    public Entity getEntityAtMouse(MouseEvent me){
+        return getEntity(new Location(me.getX() / tileSize, me.getY() / tileSize));
     }
 
     public Entity getEntity(Location mapLocation) {
@@ -83,15 +98,9 @@ public class WorldState extends GameStateAdapter {
         ImageSheet.load("Zambies.png", 32);
         decals = new LinkedList<>();
         entities = new ArrayList<>();
-        addEntity(new Location(5, 7), new Survivor());
-        entities.get(0).getInventory().addItem(new MedkitItem());
-        entities.get(0).getInventory().addItem(new BandageItem(4));
-        entities.get(0).getInventory().addItem(new BarricadeItem());
-        entities.get(0).getInventory().addItem(new BandageItem(3));
-        addDecal(new Location(100, 100), new HealingDecal());
-        addEntity(new Location(14, 7), new Survivor());
-        addEntity(new Location(6, 7), new Barricade());
-        addEntity(new Location(13, 7), new Barricade());
+        
+        createEntities();
+        
         for (int i = 0; i < 10; i++) {
             Location location = new Location((int) (Math.random() * 20), (int) (Math.random() * 15));
             while (getEntity(location) != null) {
@@ -106,7 +115,28 @@ public class WorldState extends GameStateAdapter {
             }
         }
     }
+    
+    public void createEntities(){
+        addEntity(new Location(5, 7), new Survivor());
+        entities.get(0).getInventory().addItem(new MedkitItem());
+        entities.get(0).getInventory().addItem(new BandageItem(4));
+        entities.get(0).getInventory().addItem(new BarricadeItem());
+        entities.get(0).getInventory().addItem(new BigGunItem(10,3));
+        addDecal(new Location(100, 100), new FadingDecal(200, Color.MAGENTA));
+        addDecal(new Location(200, 200), new HealingDecal());
+        addDecal(new Location(300, 300), new DamageDecal());
+        
+        addTextDecal(new TextDecal(new GraphicTextDecal("Boom", new Location(200,200)), 100));
+        
+        addTextDecal(new TextDecal(new GraphicTextDecal("Shaka", new Location(250,200)), 110));
 
+        addTextDecal(new TextDecal(new GraphicTextDecal("Laka", new Location(300,200)), 120));
+        
+        addEntity(new Location(14, 7), new Survivor());
+        addEntity(new Location(6, 7), new Barricade());
+        addEntity(new Location(13, 7), new Barricade());
+    }
+    
     public void keyPressed(KeyEvent ke) {
         Entity entity = entities.get(currentEntity);
         if (entity instanceof Survivor && !entity.isMoving()) {
@@ -130,11 +160,15 @@ public class WorldState extends GameStateAdapter {
         }
     }
     
+    @Override
     public void mouseClicked(MouseEvent me) {
+        clickedEntity = getEntityAtMouse(me);
+        
         inventoryPane.mouseClicked(me, null);
-        clickedEntity = getEntity(new Location(me.getX() / tileSize, me.getY() / tileSize));
+        inventoryPane.inventoryPaneManager(clickedEntity, me);
     }
     
+    @Override
     public void mouseMoved(MouseEvent me) {
         inventoryPane.mouseMoved(me, null);
     }
@@ -145,6 +179,9 @@ public class WorldState extends GameStateAdapter {
         renderDecals(g);
         renderBorders(g);
         renderInventory(g);
+        renderActionPane(g);
+        renderInfoPane(g);
+        renderStatusPane(g);
     }
     
     private void renderBorders(Graphics2D g) {
@@ -183,7 +220,20 @@ public class WorldState extends GameStateAdapter {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 12));
         g.drawString("Inventory", 654, 20);
+        
         inventoryPane.render(g, null);        
+    }
+    
+    private void renderActionPane(Graphics2D g){
+        
+    }
+    
+    private void renderInfoPane(Graphics2D g){
+        
+    }
+    
+    private void renderStatusPane(Graphics2D g){
+        
     }
     
     private void renderTiles(Graphics2D g) {

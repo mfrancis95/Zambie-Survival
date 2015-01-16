@@ -2,8 +2,13 @@ package main.java.org.zambiesurvival.engine.item;
 
 import java.awt.Graphics2D;
 import main.java.org.zambiesurvival.engine.entity.Entity;
+import static main.java.org.zambiesurvival.engine.item.ArmorItem.description;
+import static main.java.org.zambiesurvival.engine.item.ArmorItem.name;
 
 public abstract class Item extends Entity {
+    
+    public static final String name = "Item";
+    public static final String description = "???";
 
     public final int MAX_QUANTITY;
 
@@ -25,16 +30,26 @@ public abstract class Item extends Entity {
         this.quantity = quantity;
     }
 
-    public void effect() {
+    public void effect(Entity entity){
     }
 
-    public boolean use() {
+    public boolean use(Entity entity) {
         if (quantity > 0) {
             quantity--;
-            effect();
+            effect(entity);
             return true;
         }
         return false;
     }
+    
+    public String getName(){
+        return name;
+    }
+    
+    public String getDescription(){
+        return description;
+    }
+    
+    
 
 }
