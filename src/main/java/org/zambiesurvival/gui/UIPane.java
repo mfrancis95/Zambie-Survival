@@ -1,6 +1,5 @@
 package main.java.org.zambiesurvival.gui;
 
-import main.java.org.zambiesurvival.engine.Location;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -9,8 +8,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import main.java.org.zambiesurvival.engine.Location;
 import main.java.org.zambiesurvival.engine.entity.Entity;
 import main.java.org.zambiesurvival.engine.entity.Survivor;
+import main.java.org.zambiesurvival.engine.entity.decal.Decal;
 
 /**
  *
@@ -80,7 +81,7 @@ public class UIPane{
             
                 GraphicButton curr = buttons[i];
             
-                curr.update(buttons, i, GraphicButton.CLICKED, false);
+                curr.update(buttons, i, GraphicButton.CLICKED, false, e);
                 
                 //repaint();
                 
@@ -108,13 +109,10 @@ public class UIPane{
             try{
                 int mi = mouseIndex;
                 int i = calculateMouseIndex(x,y);
-                //System.out.println(i);
                 
                 if(i != mi){
                     GraphicButton curr = buttons[i];     
-                    curr.update(buttons, i, GraphicButton.HOVERING, true);
-                    
-                    //repaint();
+                    curr.update(buttons, i, GraphicButton.HOVERING, true, e);
                 }
             } catch(ArrayIndexOutOfBoundsException aie){
                 resetAllButtons();
@@ -129,6 +127,13 @@ public class UIPane{
             container.repaint();
         }
     } 
+    
+    public void cancelOperation(MouseEvent me){
+        if(!this.isWithinBounds(me)){
+            this.setHasSelectedButton(false);
+            this.getButton(this.getCurrentItemIndex()).setState(GraphicButton.NOTHING);
+        }   
+    }
     
     public boolean isWithinBounds(MouseEvent e){
         int x = e.getX();
@@ -278,14 +283,27 @@ public class UIPane{
      * JPanel that contains this UIPane
      */
     public void render(Graphics2D g, JPanel container){
-        //super.paintComponent(og);
-        //Graphics2D g = (Graphics2D)og;
-        
         for(int c=0;c<layout.col;c++){
             for(int r=0;r<layout.row;r++){
                 int z = convertMatrixToVectorIndex(r+1,c, layout.col);
                 try{
                     buttons[z].drawButtonIcon(g, new Location(placement.x+(c*size), placement.y+(r*size)));
+                    if(buttons[z].getToolTip() != null && buttons[z].getState() == GraphicButton.HOVERING){
+                        buttons[z].getToolTip().render(g);
+                    }
+                } catch(ArrayIndexOutOfBoundsException aie){
+                    //System.out.println("Not an nxn matrix(not square)");
+                }
+            }
+        }
+        
+        for(int ci=0;ci<layout.col;ci++){
+            for(int ri=0;ri<layout.row;ri++){
+                int w = convertMatrixToVectorIndex(ri+1,ci, layout.col);
+                try{
+                    if(buttons[w].getToolTip() != null && buttons[w].getState() == GraphicButton.HOVERING){
+                        buttons[w].getToolTip().render(g);
+                    }
                 } catch(ArrayIndexOutOfBoundsException aie){
                     //System.out.println("Not an nxn matrix(not square)");
                 }

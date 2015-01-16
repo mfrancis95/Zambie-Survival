@@ -6,10 +6,13 @@
 
 package main.java.org.zambiesurvival.gui;
 
-import main.java.org.zambiesurvival.engine.Location;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
+import main.java.org.zambiesurvival.engine.Location;
+import main.java.org.zambiesurvival.engine.entity.decal.Decal;
+import main.java.org.zambiesurvival.engine.entity.decal.TextDecal;
 
 /**
  *
@@ -23,6 +26,8 @@ public class GraphicButton{
     private int state;    
     private int size;
     private final UIPane pane;
+    
+    private TextDecal toolTip;
         
     public GraphicButton(int size, UIPane pane){
         this.size = size;
@@ -46,20 +51,30 @@ public class GraphicButton{
     public void setSize(int size) {
         this.size = size;
     }  
-        
+
+    public TextDecal getToolTip() {
+        return toolTip;
+    }
+
+    public void setToolTip(TextDecal toolTip) {
+        this.toolTip = toolTip;
+    }
+            
     /**
      * Override to use.
      * Executes a certain command when clicked.
+     * @param me
      */
-    public void executeWhenClicked(){
+    public void executeWhenClicked(MouseEvent me){
         
     }
     
     /**
      * Override to use.
      * Executes a certain command when hovering.
+     * @param me
      */
-    public void executeWhenHovering(){
+    public void executeWhenHovering(MouseEvent me){
         
     }
     
@@ -95,6 +110,10 @@ public class GraphicButton{
         
         g.setColor(Color.WHITE);
         g.draw(new Rectangle2D.Double(l.x, l.y, size, size));      
+        
+        //if(state == HOVERING && toolTip != null){
+        //    toolTip.render(g);
+        //}
     }
     
     /**
@@ -107,17 +126,18 @@ public class GraphicButton{
      * State to update the particular index to.
      * @param onMove
      * True if operates when the mouse moves else false.
+     * @param me
      */
-    public void update(GraphicButton[] g, int selfIndex, int state, boolean onMove){
+    public void update(GraphicButton[] g, int selfIndex, int state, boolean onMove, MouseEvent me){
         for(int i=0;i<g.length;i++){
             if(i == selfIndex){
                 g[i].setState(state);
                 
                 if(state == CLICKED){
-                    executeWhenClicked();
+                    executeWhenClicked(me);
                 }
                 else if(state == HOVERING){
-                    executeWhenHovering();
+                    executeWhenHovering(me);
                 }
                 else{
                     //System.out.println("State is nothing, does not execute any command");

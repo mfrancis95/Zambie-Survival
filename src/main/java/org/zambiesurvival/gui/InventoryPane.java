@@ -6,9 +6,10 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 import main.java.org.zambiesurvival.engine.Inventory;
-import main.java.org.zambiesurvival.engine.entity.Entity;
 import main.java.org.zambiesurvival.engine.Location;
+import main.java.org.zambiesurvival.engine.entity.Entity;
 import main.java.org.zambiesurvival.engine.entity.Survivor;
+import main.java.org.zambiesurvival.engine.entity.decal.TextDecal;
 import main.java.org.zambiesurvival.engine.item.Item;
 
 public class InventoryPane extends UIPane{
@@ -83,6 +84,25 @@ public class InventoryPane extends UIPane{
         }
     }
     
+     /**
+     * Each item use needs to decrement the entity who used the item's actions.
+     * Not sure how to do that.
+     * @param useOn 
+     * @param me 
+     */
+    public void inventoryPaneManager(Entity useOn, MouseEvent me){
+        if(this.hasSelectedButton()){
+            if(useOn != null){
+                this.getInventory().useItem(this.getCurrentItemIndex(), useOn);
+                System.out.println(useOn.toString());       
+                cancelOperation(me);
+            }
+        }
+        if(useOn == null){
+            cancelOperation(me);
+        }   
+    }
+    
     public class InventoryButton extends GraphicButton{ 
         private Item item;
         private int itemIndex;
@@ -128,16 +148,28 @@ public class InventoryPane extends UIPane{
         }
         
         @Override
-        public void executeWhenClicked(){
-            if(item != null && itemIndex != -1 && super.getState() == GraphicButton.CLICKED){
+        public void executeWhenClicked(MouseEvent me){
+            if(item != null && itemIndex != -1){
                 InventoryPane.super.setHasSelectedButton(true);
                 InventoryPane.super.setCurrentItemIndex(this.itemIndex);
             }
         }
 
         @Override
-        public void executeWhenHovering(){
-            //System.out.println("Hovering");
+        public void executeWhenHovering(MouseEvent me){
+            if(item != null && itemIndex != -1){
+                int x = me.getX();
+                int y = me.getY();
+                
+                
+                String info = item.getName()+"."+"Amt: "+item.getQuantity()+"."+item.getDescription();
+                GraphicTextDecal gt = new GraphicTextDecal(info, 8, new Location(x,y), Color.BLACK, false);
+                TextDecal tt = new TextDecal(gt, 300);
+                this.setToolTip(tt);
+            }
+            else{
+                this.setToolTip(null);
+            }
         }
         
     }
