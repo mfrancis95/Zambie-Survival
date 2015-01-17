@@ -143,8 +143,12 @@ public class GraphicTextDecal {
         createStringImages();
     }
     
-    public GraphicTextDecal(String statement, Location placement){
+    public GraphicTextDecal(String statement, Location placement) {
         this(statement, 8, placement, Color.BLACK, true);
+    }
+    
+    public GraphicTextDecal(String statement, int fontSize, Location placement, boolean renderToRight) {
+        this(statement, fontSize, placement, new Color(0, 0, 0, 0), renderToRight);
     }
     
     private void checkRenderToRight(){
