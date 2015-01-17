@@ -1,14 +1,18 @@
 package main.java.org.zambiesurvival.engine.state;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import main.java.org.zambiesurvival.engine.Game;
+import main.java.org.zambiesurvival.engine.Location;
+import main.java.org.zambiesurvival.gui.GraphicTextDecal;
 
 public class TitleState extends GameStateAdapter {
     
     private boolean keyReleased;
+    
+    private final GraphicTextDecal title = new GraphicTextDecal("Zambie Survival", 32, new Location(120, 160), true);
+    private final GraphicTextDecal subtitle = new GraphicTextDecal("Press any key to start", 16, new Location(180, 260), true);
     
     public void init() {
         keyReleased = false;
@@ -21,11 +25,8 @@ public class TitleState extends GameStateAdapter {
     public void render(Graphics2D g) {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 720, 480);
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 48));
-        g.drawString("Zambie Survival", 170, 200);
-        g.setFont(new Font("Arial", Font.PLAIN, 24));
-        g.drawString("Press any key to start", 230, 300);
+        title.render(g);
+        subtitle.render(g);
     }
     
     public void update(Game game) {
