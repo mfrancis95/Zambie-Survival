@@ -11,12 +11,7 @@ import javax.swing.JPanel;
 import main.java.org.zambiesurvival.engine.Location;
 import main.java.org.zambiesurvival.engine.entity.Entity;
 import main.java.org.zambiesurvival.engine.entity.Survivor;
-import main.java.org.zambiesurvival.engine.entity.decal.Decal;
 
-/**
- *
- * @author Nelnel33
- */
 public class UIPane{    
     /**
      * Total number of buttons in this pane.

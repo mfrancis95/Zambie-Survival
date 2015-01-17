@@ -20,17 +20,15 @@ import main.java.org.zambiesurvival.engine.entity.Barricade;
 import main.java.org.zambiesurvival.engine.entity.Entity;
 import main.java.org.zambiesurvival.engine.entity.Survivor;
 import main.java.org.zambiesurvival.engine.entity.Zambie;
-import main.java.org.zambiesurvival.engine.entity.decal.DamageDecal;
-import main.java.org.zambiesurvival.engine.entity.decal.Decal;
-import main.java.org.zambiesurvival.engine.entity.decal.FadingDecal;
-import main.java.org.zambiesurvival.engine.entity.decal.HealingDecal;
-import main.java.org.zambiesurvival.engine.entity.decal.TextDecal;
+import main.java.org.zambiesurvival.engine.decal.DamageDecal;
+import main.java.org.zambiesurvival.engine.decal.Decal;
+import main.java.org.zambiesurvival.engine.decal.FadingDecal;
+import main.java.org.zambiesurvival.engine.decal.HealingDecal;
+import main.java.org.zambiesurvival.engine.decal.TextDecal;
 import main.java.org.zambiesurvival.engine.item.BandageItem;
 import main.java.org.zambiesurvival.engine.item.BarricadeItem;
 import main.java.org.zambiesurvival.engine.item.BigGunItem;
 import main.java.org.zambiesurvival.engine.item.MedkitItem;
-import main.java.org.zambiesurvival.gui.GraphicButton;
-import main.java.org.zambiesurvival.gui.GraphicTextDecal;
 import main.java.org.zambiesurvival.gui.InventoryPane;
 
 public class WorldState extends GameStateAdapter {
@@ -53,13 +51,13 @@ public class WorldState extends GameStateAdapter {
 
     public int tileSize;
     
-    public void addDecal(Location worldLocation, Decal decal) {
-        decal.setWorldLocation(worldLocation);
+    public void addDecal(Location location, Decal decal) {
+        decal.setLocation(location);
         decals.add(decal);
     }
     
     public void addTextDecal(TextDecal decal){
-        decal.setWorldLocation(decal.graphicTextDecal.getLocation());
+        decal.setLocation(decal.graphicTextDecal.getLocation());
         decals.add(decal);
     }
 
@@ -119,15 +117,15 @@ public class WorldState extends GameStateAdapter {
         entities.get(0).getInventory().addItem(new BandageItem(4));
         entities.get(0).getInventory().addItem(new BarricadeItem());
         entities.get(0).getInventory().addItem(new BigGunItem(10,3));
-        addDecal(new Location(100, 100), new FadingDecal(200, Color.MAGENTA));
+        addDecal(new Location(100, 100), new FadingDecal(100, Color.MAGENTA));
         addDecal(new Location(200, 200), new HealingDecal());
         addDecal(new Location(300, 300), new DamageDecal());
         
-        addTextDecal(new TextDecal(new GraphicTextDecal("Boom", new Location(200,200)), 100));
+        //addTextDecal(new TextDecal(new GraphicTextDecal("Boom", new Location(200,200)), 100));
         
-        addTextDecal(new TextDecal(new GraphicTextDecal("Shaka", new Location(250,200)), 110));
+        //addTextDecal(new TextDecal(new GraphicTextDecal("Shaka", new Location(250,200)), 110));
 
-        addTextDecal(new TextDecal(new GraphicTextDecal("Laka", new Location(300,200)), 120));
+        //addTextDecal(new TextDecal(new GraphicTextDecal("Laka", new Location(300,200)), 120));
         
         addEntity(new Location(14, 7), new Survivor());
         addEntity(new Location(6, 7), new Barricade());
@@ -252,7 +250,7 @@ public class WorldState extends GameStateAdapter {
                 iterator.remove();
             }
             else {
-                decal.update(this);
+                decal.update();
             }
         }
         Entity entity = entities.get(currentEntity);
