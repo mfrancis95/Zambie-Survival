@@ -51,11 +51,7 @@ public class WorldState extends GameStateAdapter {
     
     private ImageSheet tileset;
 
-    public final int tileSize;
-
-    public WorldState(int tileSize) {
-        this.tileSize = tileSize;
-    }
+    public int tileSize;
     
     public void addDecal(Location worldLocation, Decal decal) {
         decal.setWorldLocation(worldLocation);
@@ -92,10 +88,11 @@ public class WorldState extends GameStateAdapter {
 
     public void init() {
         currentEntity = currentEntityActions = 0;
+        tileSize = 32;
+        tileset = ImageSheet.load("Tileset.png", tileSize);
+        ImageSheet.load("Survivor.png", tileSize);
+        ImageSheet.load("Zambies.png", tileSize);
         inventoryPane = new InventoryPane(inventoryPlacement, tileSize);
-        tileset = ImageSheet.load("Tileset.png", 32);
-        ImageSheet.load("Survivor.png", 32);
-        ImageSheet.load("Zambies.png", 32);
         decals = new LinkedList<>();
         entities = new ArrayList<>();
         
@@ -160,7 +157,6 @@ public class WorldState extends GameStateAdapter {
         }
     }
     
-    @Override
     public void mouseClicked(MouseEvent me) {
         clickedEntity = getEntityAtMouse(me);
         
@@ -168,7 +164,6 @@ public class WorldState extends GameStateAdapter {
         inventoryPane.inventoryPaneManager(clickedEntity, me);
     }
     
-    @Override
     public void mouseMoved(MouseEvent me) {
         inventoryPane.mouseMoved(me, null);
     }
@@ -268,8 +263,8 @@ public class WorldState extends GameStateAdapter {
             if (entity.isMoving()) {
                 Location mapLocation = entity.getMapLocation();
                 Location screenLocation = entity.getWorldLocation();
-                int destinationScreenX = mapLocation.x * 32;
-                int destinationScreenY = mapLocation.y * 32 - 8;
+                int destinationScreenX = mapLocation.x * tileSize;
+                int destinationScreenY = mapLocation.y * tileSize - 8;
                 if (screenLocation.x < destinationScreenX) {
                     entity.setWorldLocation(screenLocation.add(1, 0));
                 } 
