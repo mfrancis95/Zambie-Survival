@@ -5,7 +5,7 @@ import main.java.org.zambiesurvival.engine.entity.Entity;
 import static main.java.org.zambiesurvival.engine.item.ArmorItem.description;
 import static main.java.org.zambiesurvival.engine.item.ArmorItem.name;
 
-public abstract class Item extends Entity {
+public abstract class Item {
     
     public static final String name = "Item";
     public static final String description = "???";
@@ -15,7 +15,6 @@ public abstract class Item extends Entity {
     protected int quantity;
 
     public Item(int maxQuantity, int quantity) {
-        super();
         MAX_QUANTITY = maxQuantity;
         this.quantity = quantity;
     }
@@ -50,6 +49,4 @@ public abstract class Item extends Entity {
         return description;
     }
     
-    
-
 }
