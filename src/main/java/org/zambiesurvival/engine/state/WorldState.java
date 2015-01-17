@@ -200,10 +200,14 @@ public class WorldState extends GameStateAdapter {
     
     private void renderEntities(Graphics2D g) {
         Location location = entities.get(currentEntity).getWorldLocation();
+        
+        //Render white circle that indicates current Entity.
         g.setColor(Color.WHITE);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
         g.fillOval(location.x - 16, location.y - 8, tileSize + 32, tileSize + 32);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+        
+        //Render all entities' shadows.
         for (Entity entity : entities) {
             location = entity.getWorldLocation();
             g.setColor(Color.BLACK);
@@ -211,6 +215,8 @@ public class WorldState extends GameStateAdapter {
             g.fillOval(location.x + 4, location.y + 20, tileSize - 8, tileSize / 2);
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
         }
+        
+        //Render all entities.
         for (Entity entity : entities) {
             entity.render(g);
         }
