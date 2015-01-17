@@ -7,6 +7,7 @@
 package main.java.org.zambiesurvival.engine.entity.decal;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 /**
  *
@@ -15,7 +16,7 @@ import java.awt.Color;
 public class DamageDecal extends FadingDecal{
 
     public DamageDecal() {
-        super(100, Color.BLUE);
+        super(100, Color.BLUE, new Dimension(16,16));//tilesize
     }
     
 }
