@@ -2,6 +2,7 @@ package main.java.org.zambiesurvival.engine.state;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -122,7 +123,7 @@ public class WorldState extends GameStateAdapter {
         entities.get(0).getInventory().addItem(new BandageItem(4));
         entities.get(0).getInventory().addItem(new BarricadeItem());
         entities.get(0).getInventory().addItem(new BigGunItem(10,3));
-        addDecal(new Location(100, 100), new FadingDecal(200, Color.MAGENTA));
+        addDecal(new Location(100, 100), new FadingDecal(200, Color.MAGENTA, new Dimension(16,16)));
         addDecal(new Location(200, 200), new HealingDecal());
         addDecal(new Location(300, 300), new DamageDecal());
         
