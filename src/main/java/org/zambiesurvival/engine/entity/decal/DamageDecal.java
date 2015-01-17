@@ -12,10 +12,10 @@ import java.awt.Color;
  *
  * @author Nelnel33
  */
-public class HealingDecal extends FadingDecal{
+public class DamageDecal extends FadingDecal{
 
-    public HealingDecal() {
-        super(100,Color.RED);
+    public DamageDecal() {
+        super(100, Color.BLUE);
     }
     
 }

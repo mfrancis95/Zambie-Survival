@@ -53,7 +53,7 @@ public class GraphicTextDecal {
     /**
      * Location of the GraphicTextDecal.
      */
-    private final Location location;
+    private Location location;
     
     /**
      * Color of the background.
@@ -76,18 +76,27 @@ public class GraphicTextDecal {
      */
     private final StringImage[] stringImages;     
     
+    /**
+     * Determines whether the image renders to the left or to the right of your cursor
+     * if true - renders to right of cursor
+     * if false - renders to left of cursor.
+     */
+    private final boolean renderToRight;
+    
     
     public GraphicTextDecal(
             String statement,   
             int charPerLine,
             int fontSize,
             Location location,
-            Color background) {
+            Color background,
+            boolean renderToRight) {
         this.statement = statement;
         this.fontSize = fontSize;
         this.charPerLine = charPerLine;
         this.location = location;
         this.background = background;
+        this.renderToRight = renderToRight;
         if(statement.length()%charPerLine == 0){
             this.totalLines = statement.length()/charPerLine;
         }
@@ -100,6 +109,8 @@ public class GraphicTextDecal {
         
         this.size = new Dimension(fontSize*charPerLine, height*totalLines);
         
+        checkRenderToRight();
+        
         lines = new String[totalLines];
         stringImages = new StringImage[totalLines];
         breakString();
@@ -110,11 +121,13 @@ public class GraphicTextDecal {
             String statement,
             int fontSize,
             Location location, 
-            Color background){
+            Color background,
+            boolean renderToRight){
         this.statement = statement;
         this.fontSize = fontSize;
         this.location = location;
         this.background = background;
+        this.renderToRight = renderToRight;
         lines = breakStringByChar(statement, PUNCTUATION);
         this.charPerLine = largestString(lines).length();
         totalLines = lines.length;
@@ -124,8 +137,27 @@ public class GraphicTextDecal {
         
         this.size = new Dimension(fontSize*charPerLine, height*totalLines);
         
+        checkRenderToRight();
+        
         stringImages = new StringImage[totalLines];
         createStringImages();
+    }
+    
+    public GraphicTextDecal(String statement, Location placement){
+        this(statement, 8, placement, Color.BLACK, true);
+    }
+    
+    private void checkRenderToRight(){
+        
+        if(renderToRight){
+            //location = this.location;
+        }
+        else{
+            int x = this.location.x;
+            int y = this.location.y;
+            
+            this.location = new Location(x-this.size.width, y);
+        }         
     }
     
     private void breakString(){
@@ -250,8 +282,12 @@ public class GraphicTextDecal {
     public Dimension getSize(){
         return size;
     }
+
+    public Location getLocation() {
+        return location;
+    }
     
-    public void render(Graphics2D g){
+    public void render(Graphics2D g){     
         if(background != null){
             g.setColor(background);
             g.fill(new Rectangle2D.Double(location.x, location.y, size.width, size.height));        
@@ -276,9 +312,9 @@ public class GraphicTextDecal {
 
         
         public Test() {
-            pane = new GraphicTextDecal("Greetings! Am I the one who knocks? I am the one who knocks!", 12,  new Location(10,10), Color.BLACK);
-            hitpointSplat = new GraphicTextDecal("50",64, new Location(300,300), Color.RED);
-            ex1 = new GraphicTextDecal("Hello friend. I am the one who knocks.",8,  new Location(200,200), null);
+            pane = new GraphicTextDecal("Greetings! Am I the one who knocks? I am the one who knocks!", 12,  new Location(10,10), Color.BLACK, true);
+            hitpointSplat = new GraphicTextDecal("50",64, new Location(300,300), Color.RED, false);
+            ex1 = new GraphicTextDecal("Hello friend. I am the one who knocks.",8,  new Location(200,200), null, true);
         }
         
         @Override

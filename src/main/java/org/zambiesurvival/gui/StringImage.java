@@ -139,7 +139,7 @@ public class StringImage {
         
         int ci = (int)c;
         
-        System.out.print(c);
+        //System.out.print(c);
         
         if(ci>=zero && ci<=nine){        
             for(int i=zero;i<=nine;i++){//from 0 to 9
@@ -197,6 +197,12 @@ public class StringImage {
         }
         else if(ci == '?'){
             return font.getImage(new Location(15,3));
+        }
+        else if(ci == ':'){
+            return font.getImage(new Location(11,3));
+        }
+        else if(ci == ';'){
+            return font.getImage(new Location(12,3));
         }
         
         throw new CharacterNotSupportedException("Character "+c+" is not supported in StringImage");
