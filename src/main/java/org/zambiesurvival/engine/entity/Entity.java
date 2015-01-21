@@ -106,6 +106,7 @@ public abstract class Entity {
     
     public void setDestination(Direction direction) {
         destination = direction;
+        this.direction = direction;
     }    
     
     public void setDirection(Direction direction) {

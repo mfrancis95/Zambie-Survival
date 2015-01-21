@@ -15,7 +15,7 @@ public class GameContainer {
     
     private final Game game;
     
-    private final boolean volatileImage;
+    private final boolean fullscreen, volatileImage;
     
     private int width, height;
     
@@ -30,12 +30,13 @@ public class GameContainer {
         
     });
     
-    public GameContainer(Game game, String title, int width, int height, boolean volatileImage) {
+    public GameContainer(Game game, String title, int width, int height, boolean volatileImage, boolean fullscreen) {
         this.game = game;
         window = new JFrame(title);
         this.width = width;
         this.height = height;
         this.volatileImage = volatileImage;
+        this.fullscreen = fullscreen;
         window.setContentPane(new GamePanel()); 
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
@@ -44,6 +45,11 @@ public class GameContainer {
     }
     
     public void start() {
+        window.dispose();
+        if (fullscreen) {
+            window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            window.setUndecorated(true);
+        }
         window.setVisible(true);
         timer.start();
     }
@@ -67,7 +73,8 @@ public class GameContainer {
             Image image = volatileImage ? createVolatileImage(width, height) : this.image;
             Graphics2D g = (Graphics2D) image.getGraphics();
             game.render(g);
-            bork.drawImage(image, 0, 0, null);
+            Dimension dimension = getSize();
+            bork.drawImage(image, 0, 0, dimension.width, dimension.height, null);
         }
         
     }

@@ -9,7 +9,7 @@ import main.java.org.zambiesurvival.engine.Inventory;
 import main.java.org.zambiesurvival.engine.Location;
 import main.java.org.zambiesurvival.engine.entity.Entity;
 import main.java.org.zambiesurvival.engine.entity.Survivor;
-import main.java.org.zambiesurvival.engine.entity.decal.TextDecal;
+import main.java.org.zambiesurvival.engine.decal.TextDecal;
 import main.java.org.zambiesurvival.engine.item.Item;
 
 public class InventoryPane extends UIPane{
@@ -163,8 +163,7 @@ public class InventoryPane extends UIPane{
                 
                 
                 String info = item.getName()+"."+"Amt: "+item.getQuantity()+"."+item.getDescription();
-                GraphicTextDecal gt = new GraphicTextDecal(info, 8, new Location(x,y), Color.BLACK, false);
-                TextDecal tt = new TextDecal(gt, 300);
+                TextDecal tt = new TextDecal(info, 8, new Location(x, y), Color.BLACK, false);
                 this.setToolTip(tt);
             }
             else{
