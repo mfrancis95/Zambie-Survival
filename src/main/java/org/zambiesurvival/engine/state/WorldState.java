@@ -2,7 +2,6 @@ package main.java.org.zambiesurvival.engine.state;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -52,13 +51,11 @@ public class WorldState extends GameStateAdapter {
 
     public int tileSize;
     
-    public void addDecal(Location location, Decal decal) {
-        decal.setLocation(location);
+    public void addDecal(Decal decal) {
         decals.add(decal);
     }
     
-    public void addTextDecal(TextDecal decal){
-        decal.setLocation(decal.graphicTextDecal.getLocation());
+    public void addTextDecal(TextDecal decal) {
         decals.add(decal);
     }
 
@@ -114,26 +111,27 @@ public class WorldState extends GameStateAdapter {
     
     public void createEntities(){
         addEntity(new Location(5, 7), new Survivor());
+        addEntity(new Location(14, 7), new Survivor());
         entities.get(0).getInventory().addItem(new MedkitItem());
         entities.get(0).getInventory().addItem(new BandageItem(4));
         entities.get(0).getInventory().addItem(new BarricadeItem());
         entities.get(0).getInventory().addItem(new BigGunItem(10,3));
-        addDecal(new Location(100, 100), new FadingDecal(100, Color.MAGENTA));
-        addDecal(new Location(200, 200), new HealingDecal());
-        addDecal(new Location(300, 300), new DamageDecal());
+        addDecal(new FadingDecal(new Location(100, 100), 100, Color.MAGENTA));
+        addDecal(new HealingDecal(new Location(200, 200)));
+        addDecal(new DamageDecal(new Location(300, 300)));
         
-        //addTextDecal(new TextDecal(new GraphicTextDecal("Boom", new Location(200,200)), 100));
+        addTextDecal(new TextDecal("Boom", new Location(200,200)));
+        addTextDecal(new TextDecal("Shaka", new Location(250,200)));
+        addTextDecal(new TextDecal("Laka", new Location(300,200)));
         
-        //addTextDecal(new TextDecal(new GraphicTextDecal("Shaka", new Location(250,200)), 110));
-
-        //addTextDecal(new TextDecal(new GraphicTextDecal("Laka", new Location(300,200)), 120));
-        
-        addEntity(new Location(14, 7), new Survivor());
         addEntity(new Location(6, 7), new Barricade());
         addEntity(new Location(13, 7), new Barricade());
     }
     
     public void keyPressed(KeyEvent ke) {
+        if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            System.exit(0);
+        }
         Entity entity = entities.get(currentEntity);
         if (entity instanceof Survivor && !entity.isMoving()) {
             switch (ke.getKeyCode()) {

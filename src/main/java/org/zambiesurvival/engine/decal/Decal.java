@@ -9,7 +9,8 @@ public abstract class Decal {
     
     protected Location location;
     
-    public Decal(int lifespan) {
+    public Decal(Location location, int lifespan) {
+        this.location = location;
         this.lifespan = lifespan;
     }
     

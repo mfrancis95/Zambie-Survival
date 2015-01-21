@@ -3,13 +3,14 @@ package main.java.org.zambiesurvival.engine.decal;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import main.java.org.zambiesurvival.engine.Location;
 
 public class FadingDecal extends Decal {
     
     protected final Color color;
     
-    public FadingDecal(int lifespan, Color color) {
-        super(lifespan);
+    public FadingDecal(Location location, int lifespan, Color color) {
+        super(location, lifespan);
         this.color = color;
     }
 

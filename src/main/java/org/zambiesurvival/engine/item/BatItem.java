@@ -1,8 +1,6 @@
 package main.java.org.zambiesurvival.engine.item;
 
 import java.awt.Graphics2D;
-import static main.java.org.zambiesurvival.engine.item.ArmorItem.description;
-import static main.java.org.zambiesurvival.engine.item.ArmorItem.name;
 import main.java.org.zambiesurvival.engine.state.WorldState;
 
 public class BatItem extends MeleeWeaponItem {
@@ -19,12 +17,10 @@ public class BatItem extends MeleeWeaponItem {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
     public void render(Graphics2D g) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
     public void update(WorldState world) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

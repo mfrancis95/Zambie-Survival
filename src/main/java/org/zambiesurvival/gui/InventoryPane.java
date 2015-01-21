@@ -163,8 +163,7 @@ public class InventoryPane extends UIPane{
                 
                 
                 String info = item.getName()+"."+"Amt: "+item.getQuantity()+"."+item.getDescription();
-                GraphicTextDecal gt = new GraphicTextDecal(info, 8, new Location(x,y), Color.BLACK, false);
-                TextDecal tt = new TextDecal(300, gt);
+                TextDecal tt = new TextDecal(info, 8, new Location(x, y), Color.BLACK, false);
                 this.setToolTip(tt);
             }
             else{
