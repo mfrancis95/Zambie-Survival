@@ -2,7 +2,6 @@ package main.java.org.zambiesurvival.engine.state;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -21,17 +20,15 @@ import main.java.org.zambiesurvival.engine.entity.Barricade;
 import main.java.org.zambiesurvival.engine.entity.Entity;
 import main.java.org.zambiesurvival.engine.entity.Survivor;
 import main.java.org.zambiesurvival.engine.entity.Zambie;
-import main.java.org.zambiesurvival.engine.entity.decal.DamageDecal;
-import main.java.org.zambiesurvival.engine.entity.decal.Decal;
-import main.java.org.zambiesurvival.engine.entity.decal.FadingDecal;
-import main.java.org.zambiesurvival.engine.entity.decal.HealingDecal;
-import main.java.org.zambiesurvival.engine.entity.decal.TextDecal;
+import main.java.org.zambiesurvival.engine.decal.DamageDecal;
+import main.java.org.zambiesurvival.engine.decal.Decal;
+import main.java.org.zambiesurvival.engine.decal.FadingDecal;
+import main.java.org.zambiesurvival.engine.decal.HealingDecal;
+import main.java.org.zambiesurvival.engine.decal.TextDecal;
 import main.java.org.zambiesurvival.engine.item.BandageItem;
 import main.java.org.zambiesurvival.engine.item.BarricadeItem;
 import main.java.org.zambiesurvival.engine.item.BigGunItem;
 import main.java.org.zambiesurvival.engine.item.MedkitItem;
-import main.java.org.zambiesurvival.gui.GraphicButton;
-import main.java.org.zambiesurvival.gui.GraphicTextDecal;
 import main.java.org.zambiesurvival.gui.InventoryPane;
 
 public class WorldState extends GameStateAdapter {
@@ -52,19 +49,13 @@ public class WorldState extends GameStateAdapter {
     
     private ImageSheet tileset;
 
-    public final int tileSize;
-
-    public WorldState(int tileSize) {
-        this.tileSize = tileSize;
-    }
+    public int tileSize;
     
-    public void addDecal(Location worldLocation, Decal decal) {
-        decal.setWorldLocation(worldLocation);
+    public void addDecal(Decal decal) {
         decals.add(decal);
     }
     
-    public void addTextDecal(TextDecal decal){
-        decal.setWorldLocation(decal.graphicTextDecal.getLocation());
+    public void addTextDecal(TextDecal decal) {
         decals.add(decal);
     }
 
@@ -93,10 +84,11 @@ public class WorldState extends GameStateAdapter {
 
     public void init() {
         currentEntity = currentEntityActions = 0;
+        tileSize = 32;
+        tileset = ImageSheet.load("Tileset.png", tileSize);
+        ImageSheet.load("Survivor.png", tileSize);
+        ImageSheet.load("Zambies.png", tileSize);
         inventoryPane = new InventoryPane(inventoryPlacement, tileSize);
-        tileset = ImageSheet.load("Tileset.png", 32);
-        ImageSheet.load("Survivor.png", 32);
-        ImageSheet.load("Zambies.png", 32);
         decals = new LinkedList<>();
         entities = new ArrayList<>();
         
@@ -119,26 +111,27 @@ public class WorldState extends GameStateAdapter {
     
     public void createEntities(){
         addEntity(new Location(5, 7), new Survivor());
+        addEntity(new Location(14, 7), new Survivor());
         entities.get(0).getInventory().addItem(new MedkitItem());
         entities.get(0).getInventory().addItem(new BandageItem(4));
         entities.get(0).getInventory().addItem(new BarricadeItem());
         entities.get(0).getInventory().addItem(new BigGunItem(10,3));
-        addDecal(new Location(100, 100), new FadingDecal(200, Color.MAGENTA, new Dimension(16,16)));
-        addDecal(new Location(200, 200), new HealingDecal());
-        addDecal(new Location(300, 300), new DamageDecal());
+        addDecal(new FadingDecal(new Location(100, 100), 100, Color.MAGENTA));
+        addDecal(new HealingDecal(new Location(200, 200)));
+        addDecal(new DamageDecal(new Location(300, 300)));
         
-        addTextDecal(new TextDecal(new GraphicTextDecal("Boom", new Location(200,200)), 100));
+        addTextDecal(new TextDecal("Boom", new Location(200,200)));
+        addTextDecal(new TextDecal("Shaka", new Location(250,200)));
+        addTextDecal(new TextDecal("Laka", new Location(300,200)));
         
-        addTextDecal(new TextDecal(new GraphicTextDecal("Shaka", new Location(250,200)), 110));
-
-        addTextDecal(new TextDecal(new GraphicTextDecal("Laka", new Location(300,200)), 120));
-        
-        addEntity(new Location(14, 7), new Survivor());
         addEntity(new Location(6, 7), new Barricade());
         addEntity(new Location(13, 7), new Barricade());
     }
     
     public void keyPressed(KeyEvent ke) {
+        if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            System.exit(0);
+        }
         Entity entity = entities.get(currentEntity);
         if (entity instanceof Survivor && !entity.isMoving()) {
             switch (ke.getKeyCode()) {
@@ -161,7 +154,6 @@ public class WorldState extends GameStateAdapter {
         }
     }
     
-    @Override
     public void mouseClicked(MouseEvent me) {
         clickedEntity = getEntityAtMouse(me);
         
@@ -169,7 +161,6 @@ public class WorldState extends GameStateAdapter {
         inventoryPane.inventoryPaneManager(clickedEntity, me);
     }
     
-    @Override
     public void mouseMoved(MouseEvent me) {
         inventoryPane.mouseMoved(me, null);
     }
@@ -258,7 +249,7 @@ public class WorldState extends GameStateAdapter {
                 iterator.remove();
             }
             else {
-                decal.update(this);
+                decal.update();
             }
         }
         Entity entity = entities.get(currentEntity);
@@ -269,8 +260,8 @@ public class WorldState extends GameStateAdapter {
             if (entity.isMoving()) {
                 Location mapLocation = entity.getMapLocation();
                 Location screenLocation = entity.getWorldLocation();
-                int destinationScreenX = mapLocation.x * 32;
-                int destinationScreenY = mapLocation.y * 32 - 8;
+                int destinationScreenX = mapLocation.x * tileSize;
+                int destinationScreenY = mapLocation.y * tileSize - 8;
                 if (screenLocation.x < destinationScreenX) {
                     entity.setWorldLocation(screenLocation.add(1, 0));
                 } 

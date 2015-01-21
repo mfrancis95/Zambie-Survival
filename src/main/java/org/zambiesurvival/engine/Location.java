@@ -55,9 +55,8 @@ public class Location implements Serializable {
         return new Location(x - location.x, y - location.y);
     }
     
-    @Override
     public String toString(){
-        return "("+x+", "+y+")";
+        return "(" + x + ", " + y + ")";
     }
     
 }

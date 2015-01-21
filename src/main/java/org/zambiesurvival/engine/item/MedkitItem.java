@@ -2,17 +2,20 @@ package main.java.org.zambiesurvival.engine.item;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import static main.java.org.zambiesurvival.engine.item.ArmorItem.description;
-import static main.java.org.zambiesurvival.engine.item.ArmorItem.name;
 import main.java.org.zambiesurvival.engine.state.WorldState;
 
 public class MedkitItem extends HealingItem {
-    
-    public static final String name = "Medkit";
-    public static final String description = "For ages 3 to 12.";
 
     public MedkitItem() {
         super(1, 1, 25);
+    }
+    
+    public String getDescription(){
+        return "For ages 3 to 12.";
+    }
+    
+    public String getName(){
+        return "Medkit";
     }
 
     public void render(Graphics2D g) {
@@ -32,12 +35,4 @@ public class MedkitItem extends HealingItem {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
-    public String getName(){
-        return name;
-    }
-    
-    public String getDescription(){
-        return description;
-    }
-
 }
